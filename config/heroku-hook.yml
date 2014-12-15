@@ -1,0 +1,6 @@
+projects_base_path: /opt/apps
+stack: heroku
+dirs:
+  app: _app
+  cache: _cache
+  env: _env

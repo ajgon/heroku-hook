@@ -1,6 +1,8 @@
 source 'https://rubygems.org'
 ruby '2.1.5'
 
+gem 'git'
+
 group :development, :test do
   gem 'rspec'
   gem 'simplecov', require: false
@@ -11,4 +13,5 @@ group :development, :test do
   gem 'reek', require: false
   gem 'overcommit', require: false
   gem 'gemsurance', require: false
+  gem 'sandi_meter', require: false
 end
