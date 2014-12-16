@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+Dir["#{File.dirname(__FILE__)}/../lib/**/*.rb"].each { |f| require f }
+
+receiver = HerokuHook::Receiver.new(Dir.pwd)
+config = HerokuHook::Config.new(File.join(Dir.pwd, 'hooks', '.heroku-hook.yml'))
+builder = HerokuHook::App::Builder.new(receiver, config)
+
+builder.run

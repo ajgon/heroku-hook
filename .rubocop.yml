@@ -1,7 +1,10 @@
+AllCops:
+  Exclude:
+    - 'spec/fixtures/**/*'
 Metrics/LineLength:
   Max: 120
 Metrics/AbcSize:
   Max: 20
-AllCops:
+Style/FileName:
   Exclude:
-    - 'spec/fixtures/**/*'
+    - 'bin/*'

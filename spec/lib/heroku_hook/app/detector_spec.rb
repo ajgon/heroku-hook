@@ -1,11 +1,32 @@
 require 'spec_helper'
 
-def check_if_app_detects_properly(path, type_name)
+def build_detector_for(path)
   config.projects_base_path = File.join(RSpec.configuration.fixture_path, 'apps', path)
-  detector = HerokuHook::App::Detector.new(receiver, config)
-  detector.run
-  expect(detector.output).to eq "-----> #{type_name} app detected"
-  expect(detector.success).to be_truthy
+  HerokuHook::App::Detector.new(receiver, config)
+end
+
+def expect_app_not_detected(path)
+  detector = build_detector_for(path)
+  success = false
+
+  expect { success = detector.run }.to output("\e[1G !     Push rejected, no Heroku-supported app detected\n").to_stdout
+  expect(success).to be_falsey
+end
+
+def expect_app_detected(path, type_name)
+  detector = build_detector_for(path)
+  success = false
+
+  expect { success = detector.run }.to output("\e[1G-----> #{type_name} app detected\n").to_stdout
+  expect(success).to be_truthy
+end
+
+def check_if_app_detects_properly(path, type_name = nil)
+  if type_name
+    expect_app_detected(path, type_name)
+  else
+    expect_app_not_detected(path)
+  end
 end
 
 RSpec.describe 'Detector' do
@@ -68,11 +89,6 @@ RSpec.describe 'Detector' do
   end
 
   it 'should not detect any application' do
-    config.projects_base_path = File.join(RSpec.configuration.fixture_path, 'apps', 'no-known-project')
-    detector = HerokuHook::App::Detector.new(receiver, config)
-    detector.run
-
-    expect(detector.output).to eq " !     Push rejected, no #{config.stack.upcase}-supported app detected"
-    expect(detector.success).to be_falsey
+    check_if_app_detects_properly('no-known-project')
   end
 end

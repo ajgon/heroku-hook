@@ -39,8 +39,10 @@ RSpec.describe 'Fetcher' do
     FileUtils.mkdir_p(File.join(target_path, receiver.name, '_app', 'to-be-removed'))
     File.open(File.join(target_path, receiver.name, '_app', 'to-be-removed-as-well'), 'w') { |f| f.write 'remove' }
 
-    fetcher.export
+    success = false
+    expect { success = fetcher.run }.to output("\e[1GFetching repository, done.\n").to_stdout
 
+    expect(success).to be_truthy
     expect(File.exist?(File.join(fetcher.app_path, 'to-be-removed'))).to be_falsey
     expect(File.exist?(File.join(fetcher.app_path, 'to-be-removed-as-well'))).to be_falsey
     expect(File.exist?(File.join(fetcher.app_path, 'app'))).to be_truthy

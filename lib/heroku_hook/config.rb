@@ -6,7 +6,9 @@ module HerokuHook
   class Config
     def initialize(path = nil)
       config = YAML.load_file(File.join(File.dirname(__FILE__), '../..', 'config', 'heroku-hook.yml'))
-      @config = JSON.parse((path ? config.merge(YAML.load_file(path)) : config).to_json, object_class: OpenStruct)
+      @config = JSON.parse(
+        (File.exist?(path.to_s) ? config.merge(YAML.load_file(path)) : config).to_json, object_class: OpenStruct
+      )
     end
 
     def self.load(path)

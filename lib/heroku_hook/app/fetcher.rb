@@ -16,9 +16,12 @@ module HerokuHook
         Git.export(@receiver.repo_path, @app_path)
       end
 
-      def export
+      def run
+        HerokuHook::Display.out 'Fetching repository, '
         prepare
         clone
+        HerokuHook::Display.raw_outln 'done.'
+        true
       end
     end
   end

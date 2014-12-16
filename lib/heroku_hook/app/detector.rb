@@ -4,19 +4,29 @@ module HerokuHook
   module App
     # Detects app type in project dir using heroku buildpacks matchers
     class Detector < HerokuHook::App::Base
-      attr_reader :output, :success
-
-      def initialize(receiver, config)
-        @output, @success = 'no', false
-        super(receiver, config)
+      def run
+        check
+        build_output
+        HerokuHook::Display.outln(@output)
+        @success
       end
 
-      def run
+      private
+
+      def build_output
+        if @success
+          @output = "-----> #{@output.strip} app detected"
+        else
+          @output = " !     Push rejected, no #{@config.stack.capitalize}-supported app detected"
+        end
+      end
+
+      def check
         @config.buildpacks_order.each do |name|
-          @output, @success = ["-----> #{`#{command(name, @app_path)}`.strip} app detected", $CHILD_STATUS.success?]
+          @output, @success = [`#{command(name, @app_path)}`, $CHILD_STATUS.success?]
           break if @success
         end
-        @output = " !     Push rejected, no #{@config.stack.upcase}-supported app detected" unless @success
+        [@output, @success]
       end
 
       def command(language, app_path)
