@@ -4,3 +4,15 @@ dirs:
   app: _app
   cache: _cache
   env: _env
+buildpacks_path: /opt/buildpacks
+buildpacks_order:
+  - ruby
+  - nodejs
+  - clojure
+  - python
+  - java
+  - gradle
+  - grails
+  - scala
+  - play
+  - php
