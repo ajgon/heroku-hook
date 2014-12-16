@@ -45,6 +45,6 @@ RSpec.describe 'Fetcher' do
     expect(success).to be_truthy
     expect(File.exist?(File.join(fetcher.app_path, 'to-be-removed'))).to be_falsey
     expect(File.exist?(File.join(fetcher.app_path, 'to-be-removed-as-well'))).to be_falsey
-    expect(File.exist?(File.join(fetcher.app_path, 'app'))).to be_truthy
+    expect(File.exist?(File.join(fetcher.app_path, 'Gemfile'))).to be_truthy
   end
 end

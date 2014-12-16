@@ -22,15 +22,11 @@ module HerokuHook
       end
 
       def check
-        @config.buildpacks_order.each do |name|
-          @output, @success = [`#{command(name, @app_path)}`, $CHILD_STATUS.success?]
+        @config.buildpacks_order.each do |language|
+          @output, @success = [`#{command('detect', language)}`, $CHILD_STATUS.success?]
           break if @success
         end
         [@output, @success]
-      end
-
-      def command(language, app_path)
-        File.join(@config.buildpacks_path, "heroku-buildpack-#{language}", 'bin', 'detect') + ' ' + app_path
       end
     end
   end
