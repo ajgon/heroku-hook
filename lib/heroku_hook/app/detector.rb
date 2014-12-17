@@ -5,10 +5,10 @@ module HerokuHook
     # Detects app type in project dir using heroku buildpacks matchers
     class Detector < HerokuHook::App::Base
       def run
-        check
+        language = detect_language
         build_output
         HerokuHook::Display.outln(@output)
-        @success
+        [language, @success]
       end
 
       private
@@ -21,12 +21,11 @@ module HerokuHook
         end
       end
 
-      def check
-        @config.buildpacks_order.each do |language|
+      def detect_language
+        @config.buildpacks_order.detect do |language|
           @output, @success = [`#{command('detect', language)}`, $CHILD_STATUS.success?]
-          break if @success
+          @success
         end
-        [@output, @success]
       end
     end
   end

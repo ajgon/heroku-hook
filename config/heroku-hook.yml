@@ -1,5 +1,5 @@
 projects_base_path: /opt/apps
-stack: heroku
+stack: cedar
 dirs:
   app: _app
   cache: _cache

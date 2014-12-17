@@ -8,8 +8,8 @@ end
 def expect_app_not_detected(path)
   detector = build_detector_for(path)
   success = false
-
-  expect { success = detector.run }.to output("\e[1G !     Push rejected, no Heroku-supported app detected\n").to_stdout
+  expect { success = detector.run.last }
+    .to output("\e[1G !     Push rejected, no Cedar-supported app detected\n").to_stdout
   expect(success).to be_falsey
 end
 

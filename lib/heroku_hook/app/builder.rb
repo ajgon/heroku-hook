@@ -5,12 +5,15 @@ module HerokuHook
       def initialize(receiver, config)
         @fetcher = HerokuHook::App::Fetcher.new(receiver, config)
         @detector = HerokuHook::App::Detector.new(receiver, config)
+        @compiler = HerokuHook::App::Compiler.new(receiver, config)
 
         super(receiver, config)
       end
 
       def run
-        [@fetcher, @detector].all?(&:run)
+        @fetcher.run
+        language, _success = @detector.run
+        @compiler.run(language)
       end
     end
   end

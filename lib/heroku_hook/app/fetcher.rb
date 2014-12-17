@@ -21,7 +21,7 @@ module HerokuHook
         prepare
         clone
         HerokuHook::Display.raw_outln 'done.'
-        true
+        [nil, true]
       end
     end
   end

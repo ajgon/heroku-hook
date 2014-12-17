@@ -6,7 +6,7 @@ RSpec.describe 'Config' do
 
   it 'should keep default options' do
     expect(config_default.projects_base_path).to eq '/opt/apps'
-    expect(config_default.stack).to eq 'heroku'
+    expect(config_default.stack).to eq 'cedar'
     expect(config_default.dirs.app).to eq '_app'
     expect(config_default.dirs.cache).to eq '_cache'
     expect(config_default.dirs.env).to eq '_env'
@@ -14,7 +14,7 @@ RSpec.describe 'Config' do
 
   it 'should load config properly' do
     expect(config.projects_base_path).to eq '/path/to/applications'
-    expect(config.stack).to eq 'heroku'
+    expect(config.stack).to eq 'cedar'
   end
 
   it 'should allow to overwrite config param manually' do
