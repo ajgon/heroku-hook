@@ -15,4 +15,5 @@ group :development, :test do
   gem 'gemsurance', require: false
   gem 'sandi_meter', require: false
   gem 'travis-lint', require: false
+  gem 'codeclimate-test-reporter', require: false
 end

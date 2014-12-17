@@ -22,6 +22,8 @@ GEM
       terminal-table (~> 1.4)
     childprocess (0.5.5)
       ffi (~> 1.0, >= 1.0.11)
+    codeclimate-test-reporter (0.4.3)
+      simplecov (>= 0.7.1, < 1.0.0)
     concord (0.1.5)
       adamantium (~> 0.2.0)
       equalizer (~> 0.0.9)
@@ -118,6 +120,7 @@ PLATFORMS
 
 DEPENDENCIES
   brakeman
+  codeclimate-test-reporter
   gemsurance
   git
   overcommit
