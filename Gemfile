@@ -14,4 +14,5 @@ group :development, :test do
   gem 'overcommit', require: false
   gem 'gemsurance', require: false
   gem 'sandi_meter', require: false
+  gem 'travis-lint', require: false
 end

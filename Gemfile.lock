@@ -103,6 +103,8 @@ GEM
     terminal-table (1.4.5)
     thread_safe (0.3.4)
     tilt (2.0.1)
+    travis-lint (2.0.0)
+      json
     unparser (0.1.16)
       abstract_type (~> 0.0.7)
       adamantium (~> 0.2.0)
@@ -124,3 +126,4 @@ DEPENDENCIES
   rubocop
   sandi_meter
   simplecov
+  travis-lint
