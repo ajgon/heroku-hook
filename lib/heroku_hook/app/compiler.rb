@@ -16,6 +16,8 @@ module HerokuHook
       private
 
       def build_thread_for(std)
+        std.sync = true
+
         Thread.new do
           process_output_from(std)
         end
