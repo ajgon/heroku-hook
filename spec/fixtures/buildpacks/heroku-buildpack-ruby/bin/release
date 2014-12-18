@@ -1,6 +1,15 @@
-#!/usr/bin/env ruby
+#!/usr/bin/env bash
+# Dummy output to satisfy tests
 
-require 'pathname'
-
-release = Pathname.new(ARGV.first).join("tmp/heroku-buildpack-release-step.yml")
-puts release.read if release.exist?
+echo "---"
+echo "addons:"
+echo "- heroku-postgresql:hobby-dev"
+echo "config_vars:"
+echo "  LANG: en_US.UTF-8"
+echo "  RAILS_ENV: production"
+echo "  RACK_ENV: production"
+echo "default_process_types:"
+echo "  rake: bundle exec rake"
+echo "  console: bin/rails console"
+echo "  web: bin/rails server -p \$PORT -e \$RAILS_ENV"
+echo "  worker: bundle exec rake jobs:work"

@@ -3,6 +3,8 @@ ruby '1.9.3'
 
 gem 'git'
 gem 'rake'
+gem 'foreman'
+gem 'foreman-export-nginx'
 
 group :development do
   gem 'brakeman', require: false

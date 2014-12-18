@@ -2,6 +2,7 @@ require 'simplecov'
 SimpleCov.start
 require 'codeclimate-test-reporter'
 require 'rspec'
+require 'build_helper'
 require 'heroku_hook'
 CodeClimate::TestReporter.start
 

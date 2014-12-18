@@ -27,7 +27,7 @@ module HerokuHook
       def process_output_from(stdout)
         while line = stdout.gets
           @output += line
-          HerokuHook::Display.outln(line)
+          HerokuHook::Displayer.outln(line)
           STDOUT.flush
         end
       end

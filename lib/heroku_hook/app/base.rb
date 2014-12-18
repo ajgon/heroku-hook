@@ -2,6 +2,8 @@ module HerokuHook
   module App
     # Base class which provides global methods for all subclasess
     class Base
+      attr_reader :app_path, :cache_path, :env_path
+
       def initialize(receiver, config)
         @receiver, @config, @output, @success = receiver, config, '', false
         %w(app cache env).each do |dir|

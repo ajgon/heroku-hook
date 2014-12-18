@@ -1,6 +1,6 @@
 module HerokuHook
   # Sends given strings to standard output
-  class Display
+  class Displayer
     def self.out(str = '')
       print "\e[1G" + str
     end

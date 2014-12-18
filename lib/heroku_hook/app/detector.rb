@@ -7,7 +7,7 @@ module HerokuHook
       def run
         language = detect_language
         build_output
-        HerokuHook::Display.outln(@output)
+        HerokuHook::Displayer.outln(@output)
         [language, @success]
       end
 

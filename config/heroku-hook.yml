@@ -1,5 +1,7 @@
 projects_base_path: /opt/apps
 stack: cedar
+processes_owner: web
+base_domain: lvh.me
 dirs:
   app: _app
   cache: _cache
@@ -16,3 +18,5 @@ buildpacks_order:
   - scala
   - play
   - php
+nginx_configs_path: /etc/nginx/apps
+supervisord_configs_path: /etc/supervisor/conf.d

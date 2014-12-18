@@ -1,17 +1,11 @@
 require 'spec_helper'
+include BuildHelper
 
 RSpec.describe 'Builder' do
-  let(:bare_repo_path) { File.join(RSpec.configuration.fixture_path, 'repos', 'bare.git') }
-  let(:config_path) { File.join(RSpec.configuration.fixture_path, 'config', 'heroku-hook.yml') }
-  let(:target_path) { File.join(RSpec.configuration.fixture_path, '..', 'fs-sandbox') }
-  let(:buildpacks_path) { File.join(RSpec.configuration.fixture_path, 'buildpacks') }
+  prepare_build_environment
 
   it 'should build proper Ruby application' do
-    receiver = HerokuHook::Receiver.new(bare_repo_path)
-    config = HerokuHook::Config.new(config_path)
-    config.projects_base_path = target_path
-    config.buildpacks_path = buildpacks_path
-    builder = HerokuHook::App::Builder.new(receiver, config)
+    builder = HerokuHook::App::Builder.new(build_receiver, build_config)
 
     expect { builder.run }
       .to output("\e[1GFetching repository, done.\n" \
