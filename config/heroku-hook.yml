@@ -20,3 +20,5 @@ buildpacks_order:
   - php
 nginx_configs_path: /etc/nginx/apps
 supervisord_configs_path: /etc/supervisor/conf.d
+ports_directory: /var/run/ports
+secure_following_ports: 5

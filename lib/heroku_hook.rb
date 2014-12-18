@@ -1,7 +1,7 @@
 require 'heroku_hook/ext/open_struct_extended'
 require 'heroku_hook/config'
 require 'heroku_hook/displayer'
-require 'heroku_hook/networker'
+require 'heroku_hook/port_handler'
 require 'heroku_hook/receiver'
 
 require 'heroku_hook/app/base'

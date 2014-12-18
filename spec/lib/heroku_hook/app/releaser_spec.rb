@@ -8,7 +8,7 @@ RSpec.describe 'Releaser' do
   let(:procfile_path) { File.join(build_config.projects_base_path, 'bare', '_app', 'Procfile') }
   let(:nginx_configs_path) { File.join(build_config.nginx_configs_path, 'bare.conf') }
   let(:supervisord_configs_path) { File.join(build_config.supervisord_configs_path, 'bare.conf') }
-  let(:port) { HerokuHook::Networker.restricted_free_port }
+  let(:port) { HerokuHook::PortHandler.new(build_config).pull }
 
   before(:each) do
     fetcher.run

@@ -8,7 +8,7 @@ module HerokuHook
       attr_reader :release_config
 
       def run(language)
-        port = HerokuHook::Networker.restricted_free_port
+        port = HerokuHook::PortHandler.new(@config).pull
         build_release_config(language)
         build_configurations(port)
         [nil, true]
