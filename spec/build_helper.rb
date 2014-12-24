@@ -17,10 +17,10 @@ module BuildHelper
   end
 
   def assign_build_config_variables(build_config)
-    build_config.projects_base_path = build_projects_base_path
-    build_config.buildpacks_path = build_buildpacks_path
+    build_config.projects_base_path, build_config.buildpacks_path = build_projects_base_path, build_buildpacks_path
     build_config.nginx_configs_path = build_projects_base_path
     build_config.supervisord_configs_path = build_projects_base_path
+    build_config.ports_directory = build_projects_base_path
     build_config
   end
 

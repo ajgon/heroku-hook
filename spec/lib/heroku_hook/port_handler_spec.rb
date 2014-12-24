@@ -68,15 +68,17 @@ RSpec.describe 'PortHandler' do
       dummy_port_handler = HerokuHook::PortHandler.new(config)
       allow(dummy_port_handler).to receive(:pull) { 8000 }
 
-      dummy_port_handler.store('appx')
+      port = dummy_port_handler.store('appx')
 
+      expect(port).to eq 8000
       expect(File.exist?(port_file)).to be_truthy
       expect(File.read(port_file).to_i).to eq 8000
     end
 
     it 'not existing port' do
-      port_handler.store('appx', 55_223)
+      port = port_handler.store('appx', 55_223)
 
+      expect(port).to eq 55_223
       expect(File.exist?(port_file)).to be_truthy
       expect(File.read(port_file).to_i).to eq 55_223
     end
@@ -85,6 +87,29 @@ RSpec.describe 'PortHandler' do
       expect { port_handler.store('appx', 5200) }.to raise_error(ArgumentError)
 
       expect(File.exist?(port_file)).to be_falsey
+    end
+  end
+
+  context '#fetch' do
+    let(:port_file) { File.join(config.ports_directory, 'appx.port') }
+    it 'non-existing file' do
+      dummy_port_handler = HerokuHook::PortHandler.new(config)
+      allow(dummy_port_handler).to receive(:pull) { 8000 }
+
+      port = dummy_port_handler.fetch('appx')
+
+      expect(port).to eq 8000
+      expect(File.exist?(port_file)).to be_truthy
+      expect(File.read(port_file).to_i).to eq 8000
+    end
+
+    it 'existing file' do
+      File.open(port_file, 'w') { |file| file.write('5432') }
+      port = port_handler.fetch('appx')
+
+      expect(port).to eq 5_432
+      expect(File.exist?(port_file)).to be_truthy
+      expect(File.read(port_file).to_i).to eq 5_432
     end
   end
 end

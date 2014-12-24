@@ -38,7 +38,7 @@ RSpec.describe 'Releaser' do
 
       expect(File.exist?(procfile_path)).to be_truthy
       expect(File.read(procfile_path))
-        .to eq "web: bin/rails server -p \$PORT -e \$RAILS_ENV\nworker: bundle exec rake jobs:work\n"
+        .to eq "web: bin/rails server -p \$PORT -e \$RAILS_ENV\n"
     end
 
     it 'should keep it as is if available' do
@@ -81,7 +81,6 @@ RSpec.describe 'Releaser' do
     expect(supervisord_config).to match(/^user=web$/)
     expect(supervisord_config).to match(%r{^directory=.*/spec/fs-sandbox/bare/_app$})
     expect(supervisord_config).to match(/^environment=PORT="#{port}"$/)
-    expect(supervisord_config).to match(/programs=bare-web-1,bare-worker-1/)
   end
 
   it 'should run releaser' do

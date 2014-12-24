@@ -8,7 +8,7 @@ module HerokuHook
       attr_reader :release_config
 
       def run(language)
-        port = HerokuHook::PortHandler.new(@config).pull
+        port = HerokuHook::PortHandler.new(@config).fetch @receiver.name
         build_release_config(language)
         build_configurations(port)
         [nil, true]
@@ -43,7 +43,8 @@ module HerokuHook
       private
 
       def run_foreman_export(name, port)
-        cmd = "foreman export #{name} #{@config.nginx_configs_path} -p #{port} -u #{@config.processes_owner} " \
+        config_path = @config.send("#{name}_configs_path")
+        cmd = "foreman export #{name} #{config_path} -p #{port} -u #{@config.processes_owner} " \
               "-f #{procfile_path} -a #{@receiver.name}"
         Open3.popen3({ 'BASE_DOMAIN' => @config.base_domain }, cmd) { |_stdin, _stdout, _stderr, thread| thread.join }
       end
@@ -53,7 +54,7 @@ module HerokuHook
       end
 
       def prepare_procfile(handler)
-        %w(web worker).each do |item|
+        %w(web).each do |item|
           handler.write "#{item}: #{release_config['default_process_types'][item]}\n"
         end
       end

@@ -36,10 +36,22 @@ module HerokuHook
     def store(name, port = nil)
       fail ArgumentError, 'This port is alredy used' unless !port || free?(port)
       port = pull unless port
-      File.open(File.join(@ports_path, "#{name}.port"), 'w') { |file| file.write(port.to_s) }
+      File.open(file_for(name), 'w') { |file| file.write(port.to_s) }
+      port
+    end
+
+    # Fetches port from file, if not present, pulls and stores new one
+    def fetch(name)
+      file_path = file_for(name)
+      return File.read(file_path).strip.to_i if File.exist?(file_path)
+      store(name)
     end
 
     private
+
+    def file_for(name)
+      File.join(@ports_path, "#{name}.port")
+    end
 
     def with_secured_ports(port)
       (0..@secure_following_ports).map { |ranger| ranger * 100 + port }
