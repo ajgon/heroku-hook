@@ -6,13 +6,19 @@ RSpec.describe 'Releaser' do
   let(:releaser) { HerokuHook::App::Releaser.new(build_receiver, build_config) }
   let(:fetcher) { HerokuHook::App::Fetcher.new(build_receiver, build_config) }
   let(:procfile_path) { File.join(build_config.projects_base_path, 'bare', '_app', 'Procfile') }
+  let(:env_path) { File.join(build_config.projects_base_path, 'bare', '_app', '.procfile.d', 'ruby.sh') }
   let(:nginx_configs_path) { File.join(build_config.nginx_configs_path, 'bare.conf') }
   let(:supervisord_configs_path) { File.join(build_config.supervisord_configs_path, 'bare.conf') }
   let(:port) { HerokuHook::PortHandler.new(build_config).pull }
 
   before(:each) do
     fetcher.run
+    FileUtils.mkdir_p(File.dirname(env_path))
+    File.open(env_path, 'w') do |file|
+      file.write File.read(File.join(RSpec.configuration.fixture_path, '.procfile.d', 'ruby.sh'))
+    end
     releaser.build_release_config('ruby')
+    releaser.prepare_release_variables('ruby')
   end
 
   it 'should fetch heroku release config' do
@@ -29,6 +35,22 @@ RSpec.describe 'Releaser' do
         'web' => 'bin/rails server -p $PORT -e $RAILS_ENV',
         'worker' => 'bundle exec rake jobs:work'
       }
+    )
+  end
+
+  it 'should create a file with release environmental variables' do
+    env_file_contents = File.read(File.join(releaser.env_path, '_default.env'))
+    app_path = releaser.app_path
+
+    expect(env_file_contents).to eq(
+      "GEM_PATH=#{app_path}/vendor/bundle/ruby/2.1.0:#{ENV['GEM_PATH']}\n" \
+      "LANG=en_US.UTF-8\n" \
+      "PATH=#{app_path}/bin:#{app_path}/vendor/bundle/bin:#{app_path}/vendor/bundle/ruby/2.1.0/bin:#{ENV['PATH']}\n" \
+      "RACK_ENV=production\n" \
+      "RAILS_ENV=production\n" \
+      "SECRET_KEY_BASE=loremipsum\n" \
+      "QUOTES_VAR=quotes here\n" \
+      "SINGLE_QUOTES_VAR='single quotes here'"
     )
   end
 
@@ -80,7 +102,9 @@ RSpec.describe 'Releaser' do
     expect(supervisord_config).to match(%r{^stderr_logfile=/var/log/bare/web-1.error.log$})
     expect(supervisord_config).to match(/^user=web$/)
     expect(supervisord_config).to match(%r{^directory=.*/spec/fs-sandbox/bare/_app$})
-    expect(supervisord_config).to match(/^environment=PORT="#{port}"$/)
+    expect(supervisord_config).to match(/^environment=.*PORT="#{port}"/)
+    expect(supervisord_config).to match(/^environment=.*RACK_ENV="production"/)
+    expect(supervisord_config).to match(/^environment=.*RAILS_ENV="production"/)
   end
 
   it 'should run releaser' do

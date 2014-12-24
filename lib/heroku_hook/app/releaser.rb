@@ -10,6 +10,7 @@ module HerokuHook
       def run(language)
         port = HerokuHook::PortHandler.new(@config).fetch @receiver.name
         build_release_config(language)
+        prepare_release_variables(language)
         build_configurations(port)
         [nil, true]
       end
@@ -18,6 +19,13 @@ module HerokuHook
         build_procfile
         build_nginx_config(port)
         build_supervisord_config(port)
+      end
+
+      def prepare_release_variables(language)
+        env_handler = HerokuHook::EnvHandler.new('HOME' => @app_path)
+        env_handler.load_file(File.join(@app_path, '.procfile.d', "#{language}.sh"))
+        File.open(env_file_path, 'w') { |env_file| env_file.write(env_handler.to_s) }
+        @release_variables = env_handler.envs
       end
 
       def build_release_config(language)
@@ -45,7 +53,7 @@ module HerokuHook
       def run_foreman_export(name, port)
         config_path = @config.send("#{name}_configs_path")
         cmd = "foreman export #{name} #{config_path} -p #{port} -u #{@config.processes_owner} " \
-              "-f #{procfile_path} -a #{@receiver.name}"
+              "-f #{procfile_path} -a #{@receiver.name} -e #{env_file_path}"
         Open3.popen3({ 'BASE_DOMAIN' => @config.base_domain }, cmd) { |_stdin, _stdout, _stderr, thread| thread.join }
       end
 
@@ -57,6 +65,12 @@ module HerokuHook
         %w(web).each do |item|
           handler.write "#{item}: #{release_config['default_process_types'][item]}\n"
         end
+      end
+
+      private
+
+      def env_file_path
+        File.join(@env_path, '_default.env')
       end
     end
   end
