@@ -13,11 +13,13 @@ RSpec.describe 'EnvHandler' do
         'SECRET_KEY_BASE' => 'something'
       }
     end
-    let(:env_file) { File.join(RSpec.configuration.fixture_path, '.procfile.d', 'ruby.sh') }
+    let(:env_file) { File.join(RSpec.configuration.fixture_path, 'procfile-d', 'ruby.sh') }
 
     it 'should load without context' do
       env_handler = HerokuHook::EnvHandler.new
       env_handler.load_file(env_file)
+      puts env_file.inspect
+      puts File.read(env_file)
 
       expect(env_handler.envs['GEM_PATH']).to match %r{vendor/bundle/ruby/2.1.0:}
       expect(env_handler.envs['PATH']).to match %r{/vendor/bundle/bin:}

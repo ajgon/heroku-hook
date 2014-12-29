@@ -21,9 +21,9 @@ module HerokuHook
         build_supervisord_config(port)
       end
 
-      def prepare_release_variables(language)
+      def prepare_release_variables(language, directory = '.procfile.d')
         env_handler = HerokuHook::EnvHandler.new('HOME' => @app_path)
-        env_handler.load_file(File.join(@app_path, '.procfile.d', "#{language}.sh"))
+        env_handler.load_file(File.join(@app_path, directory, "#{language}.sh"))
         File.open(env_file_path, 'w') { |env_file| env_file.write(env_handler.to_s) }
         @release_variables = env_handler.envs
       end
