@@ -3,11 +3,6 @@ include BuildHelper
 
 RSpec.describe 'Builder' do
   prepare_build_environment
-  let(:env_path) { File.join(build_config.projects_base_path, 'bare', '_app', '.procfile.d', 'ruby.sh') }
-
-  before(:each) do
-  end
-
   it 'should build proper Ruby application' do
     builder = HerokuHook::App::Builder.new(build_receiver, build_config)
 

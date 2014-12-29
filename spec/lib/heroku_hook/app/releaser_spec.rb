@@ -46,8 +46,8 @@ RSpec.describe 'Releaser' do
       "GEM_PATH=#{app_path}/vendor/bundle/ruby/2.1.0:#{ENV['GEM_PATH']}\n" \
       "LANG=en_US.UTF-8\n" \
       "PATH=#{app_path}/bin:#{app_path}/vendor/bundle/bin:#{app_path}/vendor/bundle/ruby/2.1.0/bin:#{ENV['PATH']}\n" \
-      "RACK_ENV=production\n" \
-      "RAILS_ENV=production\n" \
+      "RACK_ENV=#{rack_env}\n" \
+      "RAILS_ENV=#{rails_env}\n" \
       "SECRET_KEY_BASE=loremipsum\n" \
       "QUOTES_VAR=quotes here\n" \
       'SINGLE_QUOTES_VAR=single quotes here'
@@ -103,8 +103,8 @@ RSpec.describe 'Releaser' do
     expect(supervisord_config).to match(/^user=web$/)
     expect(supervisord_config).to match(%r{^directory=.*/spec/fs-sandbox/bare/_app$})
     expect(supervisord_config).to match(/^environment=.*PORT="#{port}"/)
-    expect(supervisord_config).to match(/^environment=.*RACK_ENV="production"/)
-    expect(supervisord_config).to match(/^environment=.*RAILS_ENV="production"/)
+    expect(supervisord_config).to match(/^environment=.*RACK_ENV="#{rack_env}"/)
+    expect(supervisord_config).to match(/^environment=.*RAILS_ENV="#{rails_env}"/)
   end
 
   it 'should run releaser' do

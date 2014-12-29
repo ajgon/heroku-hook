@@ -24,6 +24,14 @@ module BuildHelper
     build_config
   end
 
+  def rack_env
+    default_env('RACK_ENV', 'production')
+  end
+
+  def rails_env
+    default_env('RAILS_ENV', 'production')
+  end
+
   # :reek:UtilityFunction
   def build_projects_base_path
     File.join(RSpec.configuration.fixture_path, '..', 'fs-sandbox')
@@ -32,5 +40,10 @@ module BuildHelper
   # :reek:UtilityFunction
   def build_buildpacks_path
     File.join(RSpec.configuration.fixture_path, 'buildpacks')
+  end
+
+  # :reek:UtilityFunction
+  def default_env(name, default)
+    (env_value = ENV[name].to_s).empty? ? default : env_value
   end
 end

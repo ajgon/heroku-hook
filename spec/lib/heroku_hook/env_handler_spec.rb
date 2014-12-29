@@ -22,8 +22,8 @@ RSpec.describe 'EnvHandler' do
       expect(env_handler.envs['GEM_PATH']).to match %r{vendor/bundle/ruby/2.1.0:}
       expect(env_handler.envs['PATH']).to match %r{/vendor/bundle/bin:}
       expect(env_handler.envs['PATH']).to match %r{/vendor/bundle/ruby/2.1.0/bin:}
-      expect(env_handler.envs['RACK_ENV']).to eq 'production'
-      expect(env_handler.envs['RAILS_ENV']).to eq 'production'
+      expect(env_handler.envs['RACK_ENV']).to eq rack_env
+      expect(env_handler.envs['RAILS_ENV']).to eq rails_env
       expect(env_handler.envs['SECRET_KEY_BASE']).to eq 'loremipsum'
       expect(env_handler.envs['QUOTES_VAR']).to eq 'quotes here'
       expect(env_handler.envs['SINGLE_QUOTES_VAR']).to eq 'single quotes here'
