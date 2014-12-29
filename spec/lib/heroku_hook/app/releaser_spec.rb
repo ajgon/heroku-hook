@@ -6,7 +6,7 @@ RSpec.describe 'Releaser' do
   let(:releaser) { HerokuHook::App::Releaser.new(build_receiver, build_config) }
   let(:fetcher) { HerokuHook::App::Fetcher.new(build_receiver, build_config) }
   let(:procfile_path) { File.join(build_config.projects_base_path, 'bare', '_app', 'Procfile') }
-  let(:env_path) { File.join(build_config.projects_base_path, 'bare', '_app', '.procfile.d', 'ruby.sh') }
+  let(:env_path) { File.join(build_config.projects_base_path, 'bare', '_app', '.profile.d', 'ruby.sh') }
   let(:nginx_configs_path) { File.join(build_config.nginx_configs_path, 'bare.conf') }
   let(:supervisord_configs_path) { File.join(build_config.supervisord_configs_path, 'bare.conf') }
   let(:port) { HerokuHook::PortHandler.new(build_config).pull }
@@ -15,7 +15,7 @@ RSpec.describe 'Releaser' do
     fetcher.run
     FileUtils.mkdir_p(File.dirname(env_path))
     File.open(env_path, 'w') do |file|
-      file.write File.read(File.join(RSpec.configuration.fixture_path, '.procfile.d', 'ruby.sh'))
+      file.write File.read(File.join(RSpec.configuration.fixture_path, '.profile.d', 'ruby.sh'))
     end
     releaser.build_release_config('ruby')
     releaser.prepare_release_variables('ruby')

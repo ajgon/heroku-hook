@@ -2,8 +2,8 @@
 # Dummy output to satisfy tests
 
 sleep 1
-mkdir -p ${PWD}/spec/fs-sandbox/bare/_app/.procfile.d
-cat ${PWD}/spec/fixtures/.procfile.d/ruby.sh > ${PWD}/spec/fs-sandbox/bare/_app/.procfile.d/ruby.sh
+mkdir -p ${PWD}/spec/fs-sandbox/bare/_app/.profile.d
+cat ${PWD}/spec/fixtures/.profile.d/ruby.sh > ${PWD}/spec/fs-sandbox/bare/_app/.profile.d/ruby.sh
 echo "-----> Compiling Ruby/Rails"
 echo "-----> Using Ruby version: ruby-2.1.5"
 echo "-----> Installing dependencies using 1.6.3"

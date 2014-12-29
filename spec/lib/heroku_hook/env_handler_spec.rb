@@ -13,7 +13,7 @@ RSpec.describe 'EnvHandler' do
         'SECRET_KEY_BASE' => 'something'
       }
     end
-    let(:env_file) { File.join(RSpec.configuration.fixture_path, '.procfile.d', 'ruby.sh') }
+    let(:env_file) { File.join(RSpec.configuration.fixture_path, '.profile.d', 'ruby.sh') }
 
     it 'should load without context' do
       env_handler = HerokuHook::EnvHandler.new
