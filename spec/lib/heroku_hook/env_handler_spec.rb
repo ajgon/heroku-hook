@@ -13,13 +13,11 @@ RSpec.describe 'EnvHandler' do
         'SECRET_KEY_BASE' => 'something'
       }
     end
-    let(:env_file) { File.join(RSpec.configuration.fixture_path, 'procfile-d', 'ruby.sh') }
+    let(:env_file) { File.join(RSpec.configuration.fixture_path, '.procfile.d', 'ruby.sh') }
 
     it 'should load without context' do
       env_handler = HerokuHook::EnvHandler.new
       env_handler.load_file(env_file)
-      puts env_file.inspect
-      puts File.read(env_file)
 
       expect(env_handler.envs['GEM_PATH']).to match %r{vendor/bundle/ruby/2.1.0:}
       expect(env_handler.envs['PATH']).to match %r{/vendor/bundle/bin:}
@@ -28,7 +26,7 @@ RSpec.describe 'EnvHandler' do
       expect(env_handler.envs['RAILS_ENV']).to eq 'production'
       expect(env_handler.envs['SECRET_KEY_BASE']).to eq 'loremipsum'
       expect(env_handler.envs['QUOTES_VAR']).to eq 'quotes here'
-      expect(env_handler.envs['SINGLE_QUOTES_VAR']).to eq "'single quotes here'"
+      expect(env_handler.envs['SINGLE_QUOTES_VAR']).to eq 'single quotes here'
     end
 
     it 'should load with ENV context' do
@@ -43,7 +41,7 @@ RSpec.describe 'EnvHandler' do
         'RAILS_ENV' => 'test',
         'SECRET_KEY_BASE' => 'something',
         'QUOTES_VAR' => 'quotes here',
-        'SINGLE_QUOTES_VAR' => "'single quotes here'"
+        'SINGLE_QUOTES_VAR' => 'single quotes here'
       )
     end
 
@@ -59,7 +57,7 @@ RSpec.describe 'EnvHandler' do
         "RAILS_ENV=test\n" \
         "SECRET_KEY_BASE=something\n" \
         "QUOTES_VAR=quotes here\n" \
-        "SINGLE_QUOTES_VAR='single quotes here'"
+        'SINGLE_QUOTES_VAR=single quotes here'
       )
     end
   end

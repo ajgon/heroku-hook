@@ -6,3 +6,4 @@ echo "-----> Using Ruby version: ruby-2.1.5"
 echo "-----> Installing dependencies using 1.6.3"
 echo "       Running: bundle install --without development:test --path vendor/bundle --binstubs vendor/bundle/bin -j4 --deployment"
 echo "       Installing hello-world 1.2.0"
+cat ${PWD}/spec/fixtures/.procfile.d/ruby.sh > ${PWD}/spec/fs-sandbox/bare/_app/.procfile.d/ruby.sh

@@ -16,6 +16,7 @@ Gem::Specification.new do |gem|
   gem.require_paths = ['lib']
 
   gem.add_dependency('git')
+  gem.add_dependency('dotenv')
   gem.add_dependency('foreman')
   gem.add_dependency('foreman-export-nginx')
 end

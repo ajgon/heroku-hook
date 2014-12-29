@@ -5,6 +5,7 @@ gem 'git'
 gem 'rake'
 gem 'foreman'
 gem 'foreman-export-nginx'
+gem 'dotenv'
 
 group :development do
   gem 'brakeman', require: false

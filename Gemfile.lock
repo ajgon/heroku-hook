@@ -129,6 +129,7 @@ PLATFORMS
 DEPENDENCIES
   brakeman
   codeclimate-test-reporter
+  dotenv
   foreman
   foreman-export-nginx
   gemsurance

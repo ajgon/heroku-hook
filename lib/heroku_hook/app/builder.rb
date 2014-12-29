@@ -14,7 +14,7 @@ module HerokuHook
         @fetcher.run
         language, _success = @detector.run
         @compiler.run(language)
-        @releaser.run(language)
+        # @releaser.run(language)
       end
     end
   end
