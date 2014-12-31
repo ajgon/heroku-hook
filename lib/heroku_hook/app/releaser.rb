@@ -7,18 +7,22 @@ module HerokuHook
     class Releaser < HerokuHook::App::Base
       attr_reader :release_config
 
+      def initialize(receiver, config)
+        super(receiver, config)
+        @port = HerokuHook::PortHandler.new(@config).fetch @receiver.name
+      end
+
       def run(language)
-        port = HerokuHook::PortHandler.new(@config).fetch @receiver.name
         build_release_config(language)
         prepare_release_variables(language)
-        build_configurations(port)
+        build_configurations
         [nil, true]
       end
 
-      def build_configurations(port)
+      def build_configurations
         build_procfile
-        build_nginx_config(port)
-        build_supervisord_config(port)
+        build_nginx_config
+        build_supervisord_config
       end
 
       def prepare_release_variables(language)
@@ -39,21 +43,22 @@ module HerokuHook
         end
       end
 
-      def build_nginx_config(port)
-        run_foreman_export('nginx', port)
+      def build_nginx_config
+        run_foreman_export('nginx')
       end
 
-      def build_supervisord_config(port)
-        run_foreman_export('supervisord', port)
+      def build_supervisord_config
+        run_foreman_export('supervisord')
       end
 
       private
 
-      def run_foreman_export(name, port)
-        config_path = @config.send(name).send(:configs_path)
-        cmd = "foreman export #{name} #{config_path} -p #{port} -u #{@config.processes_owner} " \
-              "-f #{procfile_path} -a #{@receiver.name} -e #{all_env_paths}"
-        Open3.popen3(all_variables, cmd) { |_stdin, _stdout, _stderr, thread| thread.join }
+      def run_foreman_export(name)
+        cmd = "foreman export #{name} #{@config.send(name).send(:configs_path)} -p #{@port} " \
+              "-u #{@config.processes_owner} -f #{procfile_path} -a #{@receiver.name} -e #{all_env_paths}"
+        Open3.popen3(foreman_env_variables, cmd) do |_in, _out, _err, thread|
+          thread.join
+        end
       end
 
       def procfile_path
@@ -62,16 +67,34 @@ module HerokuHook
 
       def prepare_procfile(handler)
         %w(web).each do |item|
-          handler.write "#{item}: #{release_config['default_process_types'][item]}\n"
+          item_line = all_envs_with_port_handler.expand_string(release_config['default_process_types'][item])
+          handler.write "#{item}: #{item_line}\n"
         end
       end
 
       private
 
-      def all_variables
+      def foreman_env_variables
+        default_variables_for_foreman.merge(all_envs_with_port_handler.envs)
+      end
+
+      def ssl_certs_and_keys_file_basename
+        File.join(@config.nginx.ssl_certs_and_keys_path, "#{@receiver.name}")
+      end
+
+      def default_variables_for_foreman
+        {
+          'BASE_DOMAIN' => @config.project.base_domain,
+          'SSL_CERT_PATH' => ssl_certs_and_keys_file_basename + 'crt',
+          'SSL_KEY_PATH' => ssl_certs_and_keys_file_basename + 'key'
+        }
+      end
+
+      def all_envs_with_port_handler
         env_handler = HerokuHook::EnvHandler.new('HOME' => @app_path)
         env_handler.load_files(Dir.glob(File.join(@env_path, '*.env')))
-        { 'BASE_DOMAIN' => @config.project.base_domain }.merge(env_handler.envs)
+        env_handler.add_to_envs('PORT' => @port.to_s)
+        env_handler
       end
 
       def default_env_path

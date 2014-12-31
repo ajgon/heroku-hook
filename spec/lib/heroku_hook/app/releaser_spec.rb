@@ -5,11 +5,11 @@ RSpec.describe 'Releaser' do
   prepare_build_environment
   let(:releaser) { HerokuHook::App::Releaser.new(build_receiver, build_config) }
   let(:fetcher) { HerokuHook::App::Fetcher.new(build_receiver, build_config) }
+  let(:port) { HerokuHook::PortHandler.new(build_config).fetch build_receiver.name }
   let(:procfile_path) { File.join(build_config.project.base_path, 'bare', '_app', 'Procfile') }
   let(:env_path) { File.join(build_config.project.base_path, 'bare', '_app', '.profile.d', 'ruby.sh') }
   let(:nginx_configs_path) { File.join(build_config.nginx.configs_path, 'bare.conf') }
   let(:supervisord_configs_path) { File.join(build_config.supervisord.configs_path, 'bare.conf') }
-  let(:port) { HerokuHook::PortHandler.new(build_config).pull }
 
   before(:each) do
     fetcher.run
@@ -60,7 +60,7 @@ RSpec.describe 'Releaser' do
 
       expect(File.exist?(procfile_path)).to be_truthy
       expect(File.read(procfile_path))
-        .to eq "web: bin/rails server -p \$PORT -e \$RAILS_ENV\n"
+        .to eq "web: bin/rails server -p #{port} -e #{rails_env}\n"
     end
 
     it 'should keep it as is if available' do
@@ -75,7 +75,7 @@ RSpec.describe 'Releaser' do
 
   it 'should generate proper nginx config' do
     releaser.build_procfile
-    releaser.build_nginx_config(port)
+    releaser.build_nginx_config
 
     nginx_config = File.read(nginx_configs_path)
 
@@ -92,7 +92,7 @@ RSpec.describe 'Releaser' do
 
   it 'should generate proper supervisord config' do
     releaser.build_procfile
-    releaser.build_supervisord_config(port)
+    releaser.build_supervisord_config
 
     supervisord_config = File.read(supervisord_configs_path)
 

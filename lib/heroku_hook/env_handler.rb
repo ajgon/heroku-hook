@@ -24,6 +24,13 @@ module HerokuHook
       @context = context
     end
 
+    def expand_string(str)
+      @envs.each do |name, value|
+        str.gsub!(/\$\{?#{name}\}?/, value)
+      end
+      str
+    end
+
     def load_files(env_files)
       env_files.each do |env_file|
         load_file(env_file) if File.exist?(env_file)
@@ -38,12 +45,12 @@ module HerokuHook
       @envs.to_a.map { |env| env.join('=') }.join(separator)
     end
 
-    private
-
     def add_to_envs(envs)
       @envs.merge!(envs)
       envs
     end
+
+    private
 
     def parse_string(str)
       env, klass = copy_env_hash, self.class

@@ -61,5 +61,13 @@ RSpec.describe 'EnvHandler' do
         'SINGLE_QUOTES_VAR=single quotes here'
       )
     end
+
+    it 'should expand string with given variables' do
+      env_handler = HerokuHook::EnvHandler.new
+      env_handler.load_files([env_file])
+
+      expect(env_handler.expand_string('The RACK_ENV is $RACK_ENV and secret key is ${SECRET_KEY_BASE}'))
+        .to eq "The RACK_ENV is #{rack_env} and secret key is loremipsum"
+    end
   end
 end
