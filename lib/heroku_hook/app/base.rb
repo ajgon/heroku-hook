@@ -8,12 +8,12 @@ module HerokuHook
         @receiver, @config, @output, @success = receiver, config, '', false
         %w(app cache env).each do |dir|
           instance_variable_set("@#{dir}_path",
-                                File.join(@config.projects_base_path, @receiver.name, @config.dirs.send(dir)))
+                                File.join(@config.project.base_path, @receiver.name, @config.dirs.send(dir)))
         end
       end
 
       def command(name, language)
-        File.join(@config.buildpacks_path, "heroku-buildpack-#{language}", 'bin', name) +
+        File.join(@config.buildpacks.path, "heroku-buildpack-#{language}", 'bin', name) +
           ' ' + @app_path + ' ' + @cache_path + ' ' + @env_path
       end
     end

@@ -12,8 +12,9 @@ module HerokuHook
     end
 
     def initialize(config)
-      @ports_path = config.ports_directory
-      @secure_following_ports = config.secure_following_ports.to_i
+      ports_config = config.ports
+      @ports_path = ports_config.path
+      @secure_following_ports = ports_config.secure_following.to_i
     end
 
     def raw_free_port

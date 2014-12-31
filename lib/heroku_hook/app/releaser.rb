@@ -50,7 +50,7 @@ module HerokuHook
       private
 
       def run_foreman_export(name, port)
-        config_path = @config.send("#{name}_configs_path")
+        config_path = @config.send(name).send(:configs_path)
         cmd = "foreman export #{name} #{config_path} -p #{port} -u #{@config.processes_owner} " \
               "-f #{procfile_path} -a #{@receiver.name} -e #{all_env_paths}"
         Open3.popen3(all_variables, cmd) { |_stdin, _stdout, _stderr, thread| thread.join }
@@ -71,7 +71,7 @@ module HerokuHook
       def all_variables
         env_handler = HerokuHook::EnvHandler.new('HOME' => @app_path)
         env_handler.load_files(Dir.glob(File.join(@env_path, '*.env')))
-        { 'BASE_DOMAIN' => @config.base_domain }.merge(env_handler.envs)
+        { 'BASE_DOMAIN' => @config.project.base_domain }.merge(env_handler.envs)
       end
 
       def default_env_path

@@ -1,1 +1,2 @@
-projects_base_path: /path/to/applications
+project:
+  base_path: /path/to/applications

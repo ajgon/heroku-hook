@@ -11,7 +11,7 @@ RSpec.describe 'Fetcher' do
 
   let(:fetcher) do
     config = HerokuHook::Config.load(File.join(RSpec.configuration.fixture_path, 'config', 'heroku-hook.yml'))
-    config.projects_base_path = target_path
+    config.project.base_path = target_path
     HerokuHook::App::Fetcher.new(receiver, config)
   end
 

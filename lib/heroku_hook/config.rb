@@ -4,10 +4,16 @@ require 'yaml'
 module HerokuHook
   # Storage for all configuration parameters
   class Config
+    def self.recursive_merge(to, what)
+      to.merge(what) do |_key, old, new|
+        old.class == Hash ? recursive_merge(old, new) : new
+      end
+    end
+
     def initialize(path = nil)
-      config = YAML.load_file(File.join(File.dirname(__FILE__), '../..', 'config', 'heroku-hook.yml'))
-      @config = JSON.parse(
-        (File.exist?(path.to_s) ? config.merge(YAML.load_file(path)) : config).to_json, object_class: OpenStructExtended
+      @config = merge_with_defaults(
+        YAML.load_file(File.join(File.dirname(__FILE__), '../..', 'config', 'heroku-hook.yml')),
+        File.exist?(path.to_s) ? YAML.load_file(path) : {}
       )
     end
 
@@ -19,6 +25,12 @@ module HerokuHook
       name = name.to_s.sub(/=$/, '')
       @config[name] = value if value
       @config[name]
+    end
+
+    private
+
+    def merge_with_defaults(defaults, extra)
+      JSON.parse(self.class.recursive_merge(defaults, extra).to_json, object_class: OpenStructExtended)
     end
   end
 end

@@ -5,10 +5,10 @@ RSpec.describe 'Releaser' do
   prepare_build_environment
   let(:releaser) { HerokuHook::App::Releaser.new(build_receiver, build_config) }
   let(:fetcher) { HerokuHook::App::Fetcher.new(build_receiver, build_config) }
-  let(:procfile_path) { File.join(build_config.projects_base_path, 'bare', '_app', 'Procfile') }
-  let(:env_path) { File.join(build_config.projects_base_path, 'bare', '_app', '.profile.d', 'ruby.sh') }
-  let(:nginx_configs_path) { File.join(build_config.nginx_configs_path, 'bare.conf') }
-  let(:supervisord_configs_path) { File.join(build_config.supervisord_configs_path, 'bare.conf') }
+  let(:procfile_path) { File.join(build_config.project.base_path, 'bare', '_app', 'Procfile') }
+  let(:env_path) { File.join(build_config.project.base_path, 'bare', '_app', '.profile.d', 'ruby.sh') }
+  let(:nginx_configs_path) { File.join(build_config.nginx.configs_path, 'bare.conf') }
+  let(:supervisord_configs_path) { File.join(build_config.supervisord.configs_path, 'bare.conf') }
   let(:port) { HerokuHook::PortHandler.new(build_config).pull }
 
   before(:each) do

@@ -1,24 +1,30 @@
-projects_base_path: /opt/apps
 stack: cedar
 processes_owner: web
-base_domain: lvh.me
+project:
+  base_path: /opt/apps
+  base_domain: lvh.me
 dirs:
   app: _app
   cache: _cache
   env: _env
-buildpacks_path: /opt/buildpacks
-buildpacks_order:
-  - ruby
-  - nodejs
-  - clojure
-  - python
-  - java
-  - gradle
-  - grails
-  - scala
-  - play
-  - php
-nginx_configs_path: /etc/nginx/apps
-supervisord_configs_path: /etc/supervisor/conf.d
-ports_directory: /var/run/ports
-secure_following_ports: 5
+buildpacks:
+  path: /opt/buildpacks
+  order:
+    - ruby
+    - nodejs
+    - clojure
+    - python
+    - java
+    - gradle
+    - grails
+    - scala
+    - play
+    - php
+nginx:
+  configs_path: /etc/nginx/apps
+  ssl_certs_and_keys_path: /etc/nginx/apps/ssl
+supervisord:
+  configs_path: /etc/supervisor/conf.d
+ports:
+  path: /var/run/ports
+  secure_following: 5

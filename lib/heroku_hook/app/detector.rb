@@ -22,7 +22,7 @@ module HerokuHook
       end
 
       def detect_language
-        @config.buildpacks_order.detect do |language|
+        @config.buildpacks.order.detect do |language|
           @output, @success = [`#{command('detect', language)}`, $CHILD_STATUS.success?]
           @success
         end

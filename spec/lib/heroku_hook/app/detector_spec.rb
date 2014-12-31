@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 def build_detector_for(path)
-  config.projects_base_path = File.join(RSpec.configuration.fixture_path, 'apps', path)
+  config.project.base_path = File.join(RSpec.configuration.fixture_path, 'apps', path)
   HerokuHook::App::Detector.new(receiver, config)
 end
 
@@ -40,7 +40,7 @@ RSpec.describe 'Detector' do
 
   let(:config) do
     conf = HerokuHook::Config.load(File.join(RSpec.configuration.fixture_path, 'config', 'heroku-hook.yml'))
-    conf.buildpacks_path = buildpacks_path
+    conf.buildpacks.path = buildpacks_path
     conf
   end
 

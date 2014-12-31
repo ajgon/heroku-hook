@@ -2,13 +2,13 @@ require 'spec_helper'
 include BuildHelper
 
 def create_port_store(name, port)
-  File.open(File.join(config.ports_directory, "#{name}.port"), 'w') { |file| file.write(port.to_s) }
+  File.open(File.join(config.ports.path, "#{name}.port"), 'w') { |file| file.write(port.to_s) }
 end
 
 RSpec.describe 'PortHandler' do
   let(:config) do
     config = HerokuHook::Config.new(File.join(RSpec.configuration.fixture_path, 'config', 'heroku-hook.yml'))
-    config.ports_directory = build_projects_base_path
+    config.ports.path = build_projects_base_path
     config
   end
   let(:port_handler) { HerokuHook::PortHandler.new(config) }
@@ -63,7 +63,7 @@ RSpec.describe 'PortHandler' do
   end
 
   context '#store' do
-    let(:port_file) { File.join(config.ports_directory, 'appx.port') }
+    let(:port_file) { File.join(config.ports.path, 'appx.port') }
     it 'automatic port' do
       dummy_port_handler = HerokuHook::PortHandler.new(config)
       allow(dummy_port_handler).to receive(:pull) { 8000 }
@@ -91,7 +91,7 @@ RSpec.describe 'PortHandler' do
   end
 
   context '#fetch' do
-    let(:port_file) { File.join(config.ports_directory, 'appx.port') }
+    let(:port_file) { File.join(config.ports.path, 'appx.port') }
     it 'non-existing file' do
       dummy_port_handler = HerokuHook::PortHandler.new(config)
       allow(dummy_port_handler).to receive(:pull) { 8000 }
