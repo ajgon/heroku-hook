@@ -25,7 +25,6 @@ module HerokuHook
         env_handler = HerokuHook::EnvHandler.new('HOME' => @app_path)
         env_handler.load_file(File.join(@app_path, '.profile.d', "#{language}.sh"))
         File.open(default_env_path, 'w') { |env_file| env_file.write(env_handler.to_s) }
-        @release_variables = env_handler.envs
       end
 
       def build_release_config(language)
@@ -54,7 +53,7 @@ module HerokuHook
         config_path = @config.send("#{name}_configs_path")
         cmd = "foreman export #{name} #{config_path} -p #{port} -u #{@config.processes_owner} " \
               "-f #{procfile_path} -a #{@receiver.name} -e #{all_env_paths}"
-        Open3.popen3({ 'BASE_DOMAIN' => @config.base_domain }, cmd) { |_stdin, _stdout, _stderr, thread| thread.join }
+        Open3.popen3(all_variables, cmd) { |_stdin, _stdout, _stderr, thread| thread.join }
       end
 
       def procfile_path
@@ -68,6 +67,12 @@ module HerokuHook
       end
 
       private
+
+      def all_variables
+        env_handler = HerokuHook::EnvHandler.new('HOME' => @app_path)
+        env_handler.load_files(Dir.glob(File.join(@env_path, '*.env')))
+        { 'BASE_DOMAIN' => @config.base_domain }.merge(env_handler.envs)
+      end
 
       def default_env_path
         File.join(@env_path, '_default.env')

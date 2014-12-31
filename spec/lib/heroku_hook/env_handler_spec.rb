@@ -1,4 +1,5 @@
 require 'spec_helper'
+include BuildHelper
 
 RSpec.describe 'EnvHandler' do
   context 'variables loaded from file' do
@@ -17,7 +18,7 @@ RSpec.describe 'EnvHandler' do
 
     it 'should load without context' do
       env_handler = HerokuHook::EnvHandler.new
-      env_handler.load_file(env_file)
+      env_handler.load_files([env_file])
 
       expect(env_handler.envs['GEM_PATH']).to match %r{vendor/bundle/ruby/2.1.0:}
       expect(env_handler.envs['PATH']).to match %r{/vendor/bundle/bin:}

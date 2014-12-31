@@ -24,6 +24,12 @@ module HerokuHook
       @context = context
     end
 
+    def load_files(env_files)
+      env_files.each do |env_file|
+        load_file(env_file) if File.exist?(env_file)
+      end
+    end
+
     def load_file(path)
       add_to_envs(parse_string(File.read(path)))
     end
