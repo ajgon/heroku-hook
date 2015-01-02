@@ -85,8 +85,8 @@ module HerokuHook
       def default_variables_for_foreman
         {
           'BASE_DOMAIN' => @config.project.base_domain,
-          'SSL_CERT_PATH' => ssl_certs_and_keys_file_basename + 'crt',
-          'SSL_KEY_PATH' => ssl_certs_and_keys_file_basename + 'key'
+          'SSL_CERT_PATH' => ssl_certs_and_keys_file_basename + '.crt',
+          'SSL_KEY_PATH' => ssl_certs_and_keys_file_basename + '.key'
         }
       end
 
