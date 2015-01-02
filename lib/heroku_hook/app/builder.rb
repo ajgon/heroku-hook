@@ -1,3 +1,5 @@
+require 'open3'
+
 module HerokuHook
   module App
     # Builds app from start to finish
@@ -15,6 +17,10 @@ module HerokuHook
         language, _success = @detector.run
         @compiler.run(language)
         @releaser.run(language)
+      end
+
+      def run_command(cmd)
+        run_with_envs({ 'PATH' => "#{@app_path}:#{ENV['PATH']}" }, "cd #{@app_path} && #{cmd}")
       end
     end
   end

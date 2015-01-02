@@ -5,4 +5,8 @@ receiver = HerokuHook::Receiver.new(Dir.pwd)
 config = HerokuHook::Config.new(File.join(Dir.pwd, 'hooks', '.heroku-hook.yml'))
 builder = HerokuHook::App::Builder.new(receiver, config)
 
-builder.run
+if ARGV[0] == 'run'
+  builder.run_command(ARGV[1..-1].to_a.join(' '))
+else
+  builder.run
+end

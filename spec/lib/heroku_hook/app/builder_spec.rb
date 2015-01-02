@@ -17,4 +17,11 @@ RSpec.describe 'Builder' do
                  "\e[1G       Installing hello-world 1.2.0\n"
     ).to_stdout
   end
+
+  it 'should run command in context of the application' do
+    builder = HerokuHook::App::Builder.new(build_receiver, build_config)
+    FileUtils.mkdir_p(File.join(builder.app_path))
+
+    expect { builder.run_command('pwd') }.to output(File.expand_path(builder.app_path) + "\n").to_stdout
+  end
 end

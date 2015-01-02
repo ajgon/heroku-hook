@@ -6,8 +6,9 @@ RSpec.describe 'Compiler' do
 
   it 'should build proper Ruby application' do
     compiler = HerokuHook::App::Compiler.new(build_receiver, build_config)
+    result = nil
 
-    expect { compiler.run('ruby') }.to output(
+    expect { result = compiler.run('ruby') }.to output(
       "\e[1G-----> Compiling Ruby/Rails\n" \
       "\e[1G-----> Using Ruby version: ruby-2.1.5\n" \
       "\e[1G-----> Installing dependencies using 1.6.3\n" \
@@ -15,5 +16,7 @@ RSpec.describe 'Compiler' do
                    "--binstubs vendor/bundle/bin -j4 --deployment\n" \
       "\e[1G       Installing hello-world 1.2.0\n"
     ).to_stdout
+
+    expect(result).to eq [nil, true]
   end
 end
