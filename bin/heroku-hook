@@ -1,11 +1,17 @@
 #!/usr/bin/env ruby
 Dir["#{File.dirname(__FILE__)}/../lib/**/*.rb"].each { |f| require f }
 
-receiver = HerokuHook::Receiver.new(Dir.pwd)
+if ARGV[0] && ARGV[0][0..2] == 'run'
+  receiver = OpenStruct.new(name: 'receiver')
+else
+  receiver = HerokuHook::Receiver.new(Dir.pwd)
+end
 config = HerokuHook::Config.new(File.join(Dir.pwd, 'hooks', '.heroku-hook.yml'))
 builder = HerokuHook::App::Builder.new(receiver, config)
 
-if ARGV[0] == 'run'
+if ARGV[0] && ARGV[0][0..7] == 'run-for-'
+  builder.run_command(ARGV[1..-1].to_a.join(' '), ARGV[0].split('-', 3).last)
+elsif ARGV[0] && ARGV[0][0..2] == 'run'
   builder.run_command(ARGV[1..-1].to_a.join(' '))
 else
   builder.run

@@ -19,8 +19,16 @@ module HerokuHook
         @releaser.run(language)
       end
 
-      def run_command(cmd)
-        run_with_envs({ 'PATH' => "#{@app_path}:#{ENV['PATH']}" }, "cd #{@app_path} && #{cmd}")
+      def run_command(cmd, context = nil)
+        context = run_context(context)
+        run_with_envs({ 'PATH' => "#{context}:#{ENV['PATH']}" }, "sleep 0.1; cd #{context} && #{cmd}")
+      end
+
+      private
+
+      def run_context(context)
+        return @app_path if context.to_s == ''
+        File.expand_path(File.join(@config.project.base_path, context, @config.dirs.app))
       end
     end
   end
