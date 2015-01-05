@@ -9,7 +9,7 @@ module HerokuHook
 
       def initialize(receiver, config)
         super(receiver, config)
-        @port = HerokuHook::PortHandler.new(@config).fetch @receiver.name
+        @port = HerokuHook::PortHandler.new(@config).fetch project_name
       end
 
       def run(language)
@@ -49,14 +49,21 @@ module HerokuHook
 
       def build_supervisord_config
         run_foreman_export('supervisord')
+        path = File.join(@config.supervisord.configs_path, project_name + '.conf')
+        replacement = File.read(path).gsub(/^command=/, "command=heroku-hook run-for-#{project_name} ")
+        File.open(path, 'w') { |file| file.write(replacement) }
       end
 
       private
 
+      def project_name
+        @receiver.name
+      end
+
       def run_foreman_export(name)
         cmd = "foreman export #{name} #{@config.send(name).send(:configs_path)} -p #{@port} " \
-              "-u #{@config.processes_owner} -f #{procfile_path} -a #{@receiver.name} -e #{all_env_paths}"
-        Open3.popen3(foreman_env_variables, cmd) do |_in, _out, _err, thread|
+              "-u #{@config.processes_owner} -f #{procfile_path} -a #{project_name} -e #{all_env_paths}"
+        Open3.popen3(defaults_for_foreman.merge(all_envs_with_port_handler.envs), cmd) do |_in, _out, _err, thread|
           thread.join
         end
       end
@@ -72,17 +79,11 @@ module HerokuHook
         end
       end
 
-      private
-
-      def foreman_env_variables
-        default_variables_for_foreman.merge(all_envs_with_port_handler.envs)
-      end
-
       def ssl_certs_and_keys_file_basename
-        File.join(@config.nginx.ssl_certs_and_keys_path, "#{@receiver.name}")
+        File.join(@config.nginx.ssl_certs_and_keys_path, "#{project_name}")
       end
 
-      def default_variables_for_foreman
+      def defaults_for_foreman
         {
           'BASE_DOMAIN' => @config.project.base_domain,
           'SSL_CERT_PATH' => ssl_certs_and_keys_file_basename + '.crt',

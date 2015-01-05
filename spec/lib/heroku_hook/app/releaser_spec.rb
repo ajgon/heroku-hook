@@ -98,6 +98,7 @@ RSpec.describe 'Releaser' do
 
     expect(File.exist?(supervisord_configs_path)).to be_truthy
     expect(supervisord_config).to match(/^\[program:bare-web-1\]$/)
+    expect(supervisord_config).to match(/^command=heroku-hook run-for-bare bin\/rails server/)
     expect(supervisord_config).to match(%r{^stdout_logfile=/var/log/bare/web-1.log$})
     expect(supervisord_config).to match(%r{^stderr_logfile=/var/log/bare/web-1.error.log$})
     expect(supervisord_config).to match(/^user=web$/)
