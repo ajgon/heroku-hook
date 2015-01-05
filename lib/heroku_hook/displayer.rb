@@ -20,15 +20,5 @@ module HerokuHook
       stream.puts str
       stream.flush
     end
-
-    # rubocop:disable Lint/AssignmentInCondition
-    def self.pass_stream(from_stream, to_stream, opts = { rawout: true })
-      Thread.new do
-        while line = from_stream.gets
-          HerokuHook::Displayer.send((opts[:rawout] ? 'raw_out' : 'out'), line, to_stream)
-        end
-      end
-    end
-    # rubocop:enable Lint/AssignmentInCondition
   end
 end

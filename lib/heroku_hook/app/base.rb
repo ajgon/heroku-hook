@@ -19,12 +19,8 @@ module HerokuHook
           ' ' + @app_path + ' ' + @cache_path + ' ' + @env_path
       end
 
-      def run_with_envs(envs, cmd, opts = { rawout: true })
-        Open3.popen3(envs, cmd) do |_stdin, stdout, stderr, thread|
-          HerokuHook::Displayer.pass_stream stdout, $stdout, opts
-          HerokuHook::Displayer.pass_stream stderr, $stderr, opts
-          @success = thread.value.success?
-        end
+      def run_with_envs(envs, cmd, opts = {})
+        @success = Spawner.spawn(envs, cmd, opts)
       end
     end
   end

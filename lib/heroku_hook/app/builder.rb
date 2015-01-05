@@ -21,7 +21,7 @@ module HerokuHook
 
       def run_command(cmd, context = nil)
         context = run_context(context)
-        run_with_envs({ 'PATH' => "#{context}:#{ENV['PATH']}" }, "sleep 0.1; cd #{context} && #{cmd}")
+        run_with_envs({ 'PATH' => "#{context}:#{ENV['PATH']}" }, cmd, context: context)
       end
 
       private

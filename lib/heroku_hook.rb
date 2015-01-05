@@ -4,6 +4,7 @@ require 'heroku_hook/displayer'
 require 'heroku_hook/env_handler'
 require 'heroku_hook/port_handler'
 require 'heroku_hook/receiver'
+require 'heroku_hook/spawner'
 
 require 'heroku_hook/app/base'
 require 'heroku_hook/app/fetcher'

@@ -6,6 +6,7 @@ gem 'rake'
 gem 'foreman'
 gem 'foreman-export-nginx'
 gem 'dotenv'
+gem 'sys-proctable'
 
 group :development do
   gem 'brakeman', require: false
