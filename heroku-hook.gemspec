@@ -3,7 +3,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |gem|
   gem.name          = 'heroku-hook'
-  gem.version       = '0.0.4'
+  gem.version       = '0.0.5'
   gem.authors       = ['Igor Rzegocki']
   gem.email         = ['ajgon@irgon.com']
   gem.description   = 'Heroku-like post-receive hook, which sets up the application and detects buildpacks'

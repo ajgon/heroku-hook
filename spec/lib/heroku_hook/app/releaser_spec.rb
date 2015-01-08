@@ -50,7 +50,8 @@ RSpec.describe 'Releaser' do
       "RAILS_ENV=#{rails_env}\n" \
       "SECRET_KEY_BASE=loremipsum\n" \
       "QUOTES_VAR=quotes here\n" \
-      'SINGLE_QUOTES_VAR=single quotes here'
+      'SINGLE_QUOTES_VAR=single quotes here'\
+      "\nHOME=#{app_path}"
     )
   end
 
@@ -103,6 +104,7 @@ RSpec.describe 'Releaser' do
     expect(supervisord_config).to match(%r{^stderr_logfile=/var/log/bare/web-1.error.log$})
     expect(supervisord_config).to match(/^user=web$/)
     expect(supervisord_config).to match(%r{^directory=.*/spec/fs-sandbox/bare/_app$})
+    expect(supervisord_config).to match(/^environment=.*HOME="#{releaser.app_path}"/)
     expect(supervisord_config).to match(/^environment=.*PORT="#{port}"/)
     expect(supervisord_config).to match(/^environment=.*RACK_ENV="#{rack_env}"/)
     expect(supervisord_config).to match(/^environment=.*RAILS_ENV="#{rails_env}"/)

@@ -28,12 +28,12 @@ module HerokuHook
       def prepare_release_variables(language)
         env_handler = HerokuHook::EnvHandler.new('HOME' => @app_path)
         env_handler.load_file(File.join(@app_path, '.profile.d', "#{language}.sh"))
+        env_handler.add_to_envs('HOME' => @app_path)
         File.open(default_env_path, 'w') { |env_file| env_file.write(env_handler.to_s) }
       end
 
       def build_release_config(language)
-        out = `#{command('release', language)}`
-        @release_config = YAML.load(out)
+        @release_config = YAML.load(`#{command('release', language)}`)
       end
 
       def build_procfile
