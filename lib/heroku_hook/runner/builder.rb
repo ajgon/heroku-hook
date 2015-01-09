@@ -7,7 +7,7 @@ module HerokuHook
       def initialize
         @fetcher, @detector = Fetcher.new, Detector.new
         @compiler, @releaser = Compiler.new, Releaser.new
-        @cleaner = Cleaner.new
+        @post_install = PostInstall.new
         super
       end
 
@@ -16,7 +16,7 @@ module HerokuHook
         language, _success = @detector.run
         @compiler.run(language)
         @releaser.run(language)
-        @cleaner.run
+        @post_install.run(language)
       end
 
       def run_command(cmd, context = nil)
