@@ -13,7 +13,7 @@ module BuildHelper
 
   # :reek:UtilityFunction
   def prepare_build_receiver
-    HerokuHook::Receiver.handle(File.join(RSpec.configuration.fixture_path, 'repos', 'bare.git'))
+    HerokuHook::Receiver.new(File.join(RSpec.configuration.fixture_path, 'repos', 'bare.git'))
   end
 
   def prepare_build_config

@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.describe 'Fetcher' do
   before(:all) do
     @target_path = File.join(RSpec.configuration.fixture_path, '..', 'fs-sandbox')
-    HerokuHook::Receiver.handle(File.join(RSpec.configuration.fixture_path, 'repos', 'bare.git'))
+    HerokuHook::Receiver.new(File.join(RSpec.configuration.fixture_path, 'repos', 'bare.git'))
     HerokuHook::Config.load(File.join(RSpec.configuration.fixture_path, 'config', 'heroku-hook.yml'))
     HerokuHook::Config.project.base_path = @target_path
     @fetcher = HerokuHook::Runner::Fetcher.new

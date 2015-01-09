@@ -33,7 +33,7 @@ end
 
 RSpec.describe 'Detector' do
   before(:all) do
-    HerokuHook::Receiver.handle(File.join(RSpec.configuration.fixture_path, 'repos', 'bare.git'))
+    HerokuHook::Receiver.new(File.join(RSpec.configuration.fixture_path, 'repos', 'bare.git'))
     HerokuHook::Config.load(File.join(RSpec.configuration.fixture_path, 'config', 'heroku-hook.yml'))
     HerokuHook::Config.buildpacks.path = File.join(RSpec.configuration.fixture_path, 'buildpacks')
   end

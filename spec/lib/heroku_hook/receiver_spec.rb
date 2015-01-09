@@ -12,11 +12,11 @@ RSpec.describe 'Receiver' do
   end
 
   context 'repos' do
-    let(:bare) { HerokuHook::Receiver.handle(File.join(RSpec.configuration.fixture_path, 'repos', 'bare.git')) }
-    let(:normal) { HerokuHook::Receiver.handle(File.join(RSpec.configuration.fixture_path, 'repos', 'normal')) }
+    let(:bare) { HerokuHook::Receiver.new(File.join(RSpec.configuration.fixture_path, 'repos', 'bare.git')) }
+    let(:normal) { HerokuHook::Receiver.new(File.join(RSpec.configuration.fixture_path, 'repos', 'normal')) }
 
     it 'should check if repository is bare' do
-      expect { HerokuHook::Receiver.handle(File.join(RSpec.configuration.fixture_path)) }
+      expect { HerokuHook::Receiver.new(File.join(RSpec.configuration.fixture_path)) }
         .to raise_error(Git::GitExecuteError)
       expect(bare.bare?).to be_truthy
       expect(normal.bare?).to be_falsey
