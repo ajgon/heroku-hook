@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 rm /app/.heroku
 echo -e "#\x21/usr/bin/env bash\n$1/.heroku/php/sbin/httpd -d $1/.heroku/php/ \"\$@\"" > $1/.heroku/php/bin/httpd
+echo -e "#\x21/usr/bin/env bash\n$1/.heroku/php/sbin/php-fpm -p $1/.heroku/php/ \"\$@\"" > $1/.heroku/php/bin/php-fpm
 chmod +x $1/.heroku/php/bin/httpd
+chmod +x $1/.heroku/php/bin/php-fpm
 sed -i'' "s@\"/app@\"$1@g" $1/.heroku/php/etc/apache2/httpd.conf
