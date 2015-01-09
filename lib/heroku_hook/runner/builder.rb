@@ -1,9 +1,9 @@
 require 'open3'
 
 module HerokuHook
-  module App
+  module Runner
     # Builds app from start to finish
-    class Builder < HerokuHook::App::Base
+    class Builder < HerokuHook::Runner::Base
       def initialize
         @fetcher, @detector = Fetcher.new, Detector.new
         @compiler, @releaser = Compiler.new, Releaser.new

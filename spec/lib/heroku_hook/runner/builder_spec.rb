@@ -4,7 +4,7 @@ include BuildHelper
 RSpec.describe 'Builder' do
   before(:all) { prepare_build_environment }
   it 'should build proper Ruby application' do
-    builder = HerokuHook::App::Builder.new
+    builder = HerokuHook::Runner::Builder.new
 
     expect { builder.run }
       .to output("\e[1GFetching repository, done.\n" \
@@ -19,14 +19,14 @@ RSpec.describe 'Builder' do
   end
 
   it 'should run command in context of the application' do
-    builder = HerokuHook::App::Builder.new
+    builder = HerokuHook::Runner::Builder.new
     FileUtils.mkdir_p(File.join(builder.app_path))
 
     expect { builder.run_command('pwd') }.to output(File.expand_path(builder.app_path) + "\n").to_stdout
   end
 
   it 'should run command for given context' do
-    builder = HerokuHook::App::Builder.new
+    builder = HerokuHook::Runner::Builder.new
     context_path = File.expand_path(File.join(builder.app_path, '..', '..', 'test-context', '_app'))
     FileUtils.mkdir_p(context_path)
 

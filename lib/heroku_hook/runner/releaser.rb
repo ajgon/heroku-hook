@@ -2,9 +2,9 @@ require 'yaml'
 require 'open3'
 
 module HerokuHook
-  module App
+  module Runner
     # Sets up foreman, nginx and supervisord
-    class Releaser < HerokuHook::App::Base
+    class Releaser < HerokuHook::Runner::Base
       attr_reader :release_config
 
       def initialize

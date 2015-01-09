@@ -6,7 +6,7 @@ RSpec.describe 'Fetcher' do
     HerokuHook::Receiver.handle(File.join(RSpec.configuration.fixture_path, 'repos', 'bare.git'))
     HerokuHook::Config.load(File.join(RSpec.configuration.fixture_path, 'config', 'heroku-hook.yml'))
     HerokuHook::Config.project.base_path = @target_path
-    @fetcher = HerokuHook::App::Fetcher.new
+    @fetcher = HerokuHook::Runner::Fetcher.new
   end
 
   it 'should prepare repository in clean directory' do

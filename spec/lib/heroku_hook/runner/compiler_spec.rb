@@ -5,7 +5,7 @@ RSpec.describe 'Compiler' do
   before(:all) { prepare_build_environment }
 
   it 'should build proper Ruby application' do
-    compiler = HerokuHook::App::Compiler.new
+    compiler = HerokuHook::Runner::Compiler.new
     result = nil
 
     expect { result = compiler.run('ruby') }.to output(

@@ -3,7 +3,7 @@ include BuildHelper
 
 RSpec.describe 'Cleaner' do
   prepare_build_environment
-  let(:cleaner) { HerokuHook::App::Cleaner.new }
+  let(:cleaner) { HerokuHook::Runner::Cleaner.new }
 
   it 'should wipe out given directory' do
     path = File.join(build_projects_base_path, 'test')

@@ -4,7 +4,7 @@ require 'spec_helper'
 def build_detector_for(path)
   HerokuHook::Config.project.base_path = File.join(RSpec.configuration.fixture_path, 'apps', path)
   HerokuHook::Config.project_name = 'bare'
-  HerokuHook::App::Detector.new
+  HerokuHook::Runner::Detector.new
 end
 
 def expect_app_not_detected(path)

@@ -1,7 +1,7 @@
 require 'open3'
 
 module HerokuHook
-  module App
+  module Runner
     # Base class which provides global methods for all subclasess
     class Base
       attr_reader :app_path, :cache_path, :env_path

@@ -1,9 +1,9 @@
 require 'English'
 
 module HerokuHook
-  module App
+  module Runner
     # Detects app type in project dir using heroku buildpacks matchers
-    class Detector < HerokuHook::App::Base
+    class Detector < HerokuHook::Runner::Base
       def run
         language = detect_language
         build_output

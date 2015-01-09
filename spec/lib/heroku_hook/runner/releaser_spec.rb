@@ -4,8 +4,8 @@ include BuildHelper
 RSpec.describe 'Releaser' do
   before(:all) { prepare_build_environment }
   context 'Prepared environment' do
-    let(:releaser) { HerokuHook::App::Releaser.new }
-    let(:fetcher) { HerokuHook::App::Fetcher.new }
+    let(:releaser) { HerokuHook::Runner::Releaser.new }
+    let(:fetcher) { HerokuHook::Runner::Fetcher.new }
     let(:port) { HerokuHook::PortHandler.new.fetch HerokuHook::Config.project_name }
     let(:procfile_path) { File.join(HerokuHook::Config.project.base_path, 'bare', '_app', 'Procfile') }
     let(:env_path) { File.join(HerokuHook::Config.project.base_path, 'bare', '_app', '.profile.d', 'ruby.sh') }

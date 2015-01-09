@@ -1,8 +1,8 @@
 require 'git'
 module HerokuHook
-  module App
+  module Runner
     # Fetches repo from receiver path and prepares it for buildpacks
-    class Fetcher < HerokuHook::App::Base
+    class Fetcher < HerokuHook::Runner::Base
       def prepare
         [@app_path, @cache_path, @env_path].each do |path|
           FileUtils.rm_rf(path) if path == @app_path
