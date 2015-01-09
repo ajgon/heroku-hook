@@ -5,6 +5,7 @@ require 'heroku_hook/env_handler'
 require 'heroku_hook/port_handler'
 require 'heroku_hook/receiver'
 require 'heroku_hook/spawner'
+require 'heroku_hook/buildpack_environments'
 
 require 'heroku_hook/runner/base'
 require 'heroku_hook/runner/fetcher'

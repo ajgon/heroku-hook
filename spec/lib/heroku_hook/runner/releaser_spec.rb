@@ -2,7 +2,10 @@ require 'spec_helper'
 include BuildHelper
 
 RSpec.describe 'Releaser' do
-  before(:all) { prepare_build_environment }
+  before(:all) do
+    prepare_build_environment
+  end
+
   context 'Prepared environment' do
     let(:releaser) { HerokuHook::Runner::Releaser.new }
     let(:fetcher) { HerokuHook::Runner::Fetcher.new }
@@ -51,7 +54,7 @@ RSpec.describe 'Releaser' do
         "RAILS_ENV=#{rails_env}\n" \
         "SECRET_KEY_BASE=loremipsum\n" \
         "QUOTES_VAR=quotes here\n" \
-        'SINGLE_QUOTES_VAR=single quotes here'\
+        'SINGLE_QUOTES_VAR=single quotes here' \
         "\nHOME=#{app_path}"
       )
     end

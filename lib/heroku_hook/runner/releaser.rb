@@ -28,7 +28,7 @@ module HerokuHook
       def prepare_release_variables(language)
         env_handler = HerokuHook::EnvHandler.new('HOME' => @app_path)
         env_handler.load_file(File.join(@app_path, '.profile.d', "#{language}.sh"))
-        env_handler.add_to_envs('HOME' => @app_path)
+        env_handler.add_buildpack_environments(language)
         File.open(default_env_path, 'w') { |env_file| env_file.write(env_handler.to_s) }
       end
 

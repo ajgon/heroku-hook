@@ -50,6 +50,10 @@ module HerokuHook
       envs
     end
 
+    def add_buildpack_environments(language)
+      @envs.merge!(BuildpackEnvironments.send(language)) if BuildpackEnvironments.respond_to?(language)
+    end
+
     private
 
     def parse_string(str)
