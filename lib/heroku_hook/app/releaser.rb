@@ -7,9 +7,9 @@ module HerokuHook
     class Releaser < HerokuHook::App::Base
       attr_reader :release_config
 
-      def initialize(receiver, config)
-        super(receiver, config)
-        @port = HerokuHook::PortHandler.new(@config).fetch project_name
+      def initialize
+        super
+        @port = HerokuHook::PortHandler.new.fetch project_name
       end
 
       def run(language)
@@ -49,7 +49,7 @@ module HerokuHook
 
       def build_supervisord_config
         run_foreman_export('supervisord')
-        path = File.join(@config.supervisord.configs_path, project_name + '.conf')
+        path = File.join(Config.supervisord.configs_path, project_name + '.conf')
         replacement = File.read(path).gsub(/^command=/, "command=heroku-hook run-for-#{project_name} ")
         File.open(path, 'w') { |file| file.write(replacement) }
       end
@@ -57,12 +57,12 @@ module HerokuHook
       private
 
       def project_name
-        @receiver.name
+        Config.project_name
       end
 
       def run_foreman_export(name)
-        cmd = "foreman export #{name} #{@config.send(name).send(:configs_path)} -p #{@port} " \
-              "-u #{@config.processes_owner} -f #{procfile_path} -a #{project_name} -e #{all_env_paths}"
+        cmd = "foreman export #{name} #{Config.send(name).send(:configs_path)} -p #{@port} " \
+              "-u #{Config.processes_owner} -f #{procfile_path} -a #{project_name} -e #{all_env_paths}"
         Open3.popen3(defaults_for_foreman.merge(all_envs_with_port_handler.envs), cmd) do |_in, _out, _err, thread|
           thread.join
         end
@@ -80,12 +80,12 @@ module HerokuHook
       end
 
       def ssl_certs_and_keys_file_basename
-        File.join(@config.nginx.ssl_certs_and_keys_path, "#{project_name}")
+        File.join(Config.nginx.ssl_certs_and_keys_path, "#{project_name}")
       end
 
       def defaults_for_foreman
         {
-          'BASE_DOMAIN' => @config.project.base_domain,
+          'BASE_DOMAIN' => Config.project.base_domain,
           'SSL_CERT_PATH' => ssl_certs_and_keys_file_basename + '.crt',
           'SSL_KEY_PATH' => ssl_certs_and_keys_file_basename + '.key'
         }

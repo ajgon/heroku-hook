@@ -17,12 +17,12 @@ module HerokuHook
         if @success
           @output = "-----> #{@output.strip} app detected"
         else
-          @output = " !     Push rejected, no #{@config.stack.capitalize}-supported app detected"
+          @output = " !     Push rejected, no #{Config.stack.capitalize}-supported app detected"
         end
       end
 
       def detect_language
-        @config.buildpacks.order.detect do |language|
+        Config.buildpacks.order.detect do |language|
           @output, @success = [`#{command('detect', language)}`, $CHILD_STATUS.success?]
           @success
         end

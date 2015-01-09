@@ -1,8 +1,10 @@
 require 'spec_helper'
 
+# :reek:UtilityFunction
 def build_detector_for(path)
-  config.project.base_path = File.join(RSpec.configuration.fixture_path, 'apps', path)
-  HerokuHook::App::Detector.new(receiver, config)
+  HerokuHook::Config.project.base_path = File.join(RSpec.configuration.fixture_path, 'apps', path)
+  HerokuHook::Config.project_name = 'bare'
+  HerokuHook::App::Detector.new
 end
 
 def expect_app_not_detected(path)
@@ -30,18 +32,10 @@ def check_if_app_detects_properly(path, type_name = nil)
 end
 
 RSpec.describe 'Detector' do
-  let(:buildpacks_path) do
-    File.join(RSpec.configuration.fixture_path, 'buildpacks')
-  end
-
-  let(:receiver) do
-    HerokuHook::Receiver.new(File.join(RSpec.configuration.fixture_path, 'repos', 'bare.git'))
-  end
-
-  let(:config) do
-    conf = HerokuHook::Config.load(File.join(RSpec.configuration.fixture_path, 'config', 'heroku-hook.yml'))
-    conf.buildpacks.path = buildpacks_path
-    conf
+  before(:all) do
+    HerokuHook::Receiver.handle(File.join(RSpec.configuration.fixture_path, 'repos', 'bare.git'))
+    HerokuHook::Config.load(File.join(RSpec.configuration.fixture_path, 'config', 'heroku-hook.yml'))
+    HerokuHook::Config.buildpacks.path = File.join(RSpec.configuration.fixture_path, 'buildpacks')
   end
 
   it 'should detect Ruby application' do

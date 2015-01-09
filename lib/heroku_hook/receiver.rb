@@ -2,29 +2,32 @@ require 'git'
 
 module HerokuHook
   # This class is responsible for receiving post-receive hook and passing it along
+  # :reek:ClassVariable
+  # rubocop:disable Style/ClassVars
   class Receiver
-    attr_reader :bare
-    attr_reader :repo_path
-    alias_method :bare?, :bare
-
-    def initialize(repo_path)
-      @repo_path = repo_path
-      @bare = false
-      @git = init_repo(@repo_path)
+    def self.handle(repo_path)
+      @@repo_path = repo_path
+      @@bare = false
+      @@git = init_repo(@@repo_path)
+      Config.project_name = File.basename(@@repo_path).sub(/\.git$/, '')
+      self
     end
 
-    def name
-      File.basename(@repo_path).sub(/\.git$/, '')
+    def self.bare?
+      @@bare
     end
 
-    private
+    def self.repo_path
+      @@repo_path
+    end
 
-    def init_repo(path)
+    def self.init_repo(path)
       Git.open(path)
     rescue
-      @bare = true
+      @@bare = true
       bare = Git.bare(path)
       bare if bare.ls_files
     end
   end
+  # rubocop:enable Style/ClassVars
 end

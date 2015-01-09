@@ -5,23 +5,28 @@ module BuildHelper
     prepare_build_config
   end
 
+  # :reek:UtilityFunction
+  # :reek:FeatureEnvy
+  def create_port_store(name, port)
+    File.open(File.join(HerokuHook::Config.ports.path, "#{name}.port"), 'w') { |file| file.write(port.to_s) }
+  end
+
+  # :reek:UtilityFunction
   def prepare_build_receiver
-    let(:build_receiver) { HerokuHook::Receiver.new(File.join(RSpec.configuration.fixture_path, 'repos', 'bare.git')) }
+    HerokuHook::Receiver.handle(File.join(RSpec.configuration.fixture_path, 'repos', 'bare.git'))
   end
 
   def prepare_build_config
-    let(:build_config) do
-      config = HerokuHook::Config.new(File.join(RSpec.configuration.fixture_path, 'config', 'heroku-hook.yml'))
-      assign_build_config_variables(config)
-    end
+    HerokuHook::Config.load(File.join(RSpec.configuration.fixture_path, 'config', 'heroku-hook.yml'))
+    assign_build_config_variables
   end
 
-  def assign_build_config_variables(build_config)
-    build_config.project.base_path, build_config.buildpacks.path = build_projects_base_path, build_buildpacks_path
-    build_config.nginx.configs_path = build_projects_base_path
-    build_config.supervisord.configs_path = build_projects_base_path
-    build_config.ports.path = build_projects_base_path
-    build_config
+  def assign_build_config_variables
+    HerokuHook::Config.project.base_path = build_projects_base_path
+    HerokuHook::Config.buildpacks.path = build_buildpacks_path
+    HerokuHook::Config.nginx.configs_path = build_projects_base_path
+    HerokuHook::Config.supervisord.configs_path = build_projects_base_path
+    HerokuHook::Config.ports.path = build_projects_base_path
   end
 
   def rack_env

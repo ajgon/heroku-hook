@@ -11,7 +11,7 @@ module HerokuHook
       end
 
       def clone
-        Git.export(@receiver.repo_path, @app_path)
+        Git.export(Receiver.repo_path, @app_path)
       end
 
       def run

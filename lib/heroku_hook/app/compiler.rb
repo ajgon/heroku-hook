@@ -3,7 +3,7 @@ module HerokuHook
     # Runs buildback hook and builds an application
     class Compiler < HerokuHook::App::Base
       def run(language)
-        run_with_envs({ 'STACK' => @config.stack }, command('compile', language), rawout: false)
+        run_with_envs({ 'STACK' => Config.stack }, command('compile', language), rawout: false)
         [nil, @success]
       end
     end

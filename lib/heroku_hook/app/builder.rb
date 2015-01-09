@@ -4,11 +4,11 @@ module HerokuHook
   module App
     # Builds app from start to finish
     class Builder < HerokuHook::App::Base
-      def initialize(receiver, config)
-        @fetcher, @detector = Fetcher.new(receiver, config), Detector.new(receiver, config)
-        @compiler, @releaser = Compiler.new(receiver, config), Releaser.new(receiver, config)
-        @cleaner = Cleaner.new(receiver, config)
-        super(receiver, config)
+      def initialize
+        @fetcher, @detector = Fetcher.new, Detector.new
+        @compiler, @releaser = Compiler.new, Releaser.new
+        @cleaner = Cleaner.new
+        super
       end
 
       def run
@@ -28,7 +28,7 @@ module HerokuHook
 
       def run_context(context)
         return @app_path if context.to_s == ''
-        File.expand_path(File.join(@config.project.base_path, context, @config.dirs.app))
+        File.expand_path(File.join(Config.project.base_path, context, Config.dirs.app))
       end
     end
   end

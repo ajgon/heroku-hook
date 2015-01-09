@@ -2,10 +2,10 @@ require 'spec_helper'
 include BuildHelper
 
 RSpec.describe 'Compiler' do
-  prepare_build_environment
+  before(:all) { prepare_build_environment }
 
   it 'should build proper Ruby application' do
-    compiler = HerokuHook::App::Compiler.new(build_receiver, build_config)
+    compiler = HerokuHook::App::Compiler.new
     result = nil
 
     expect { result = compiler.run('ruby') }.to output(

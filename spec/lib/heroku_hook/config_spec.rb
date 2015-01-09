@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe 'Config' do
-  let(:config_default) { HerokuHook::Config.new }
+  let(:config_default) { HerokuHook::Config.load }
   let(:config) { HerokuHook::Config.load(File.join(RSpec.configuration.fixture_path, 'config', 'heroku-hook.yml')) }
 
   it 'should merge hash deeply' do
@@ -30,5 +30,11 @@ RSpec.describe 'Config' do
   it 'should allow to overwrite config param manually' do
     config.stack = 'test'
     expect(config.stack).to eq 'test'
+  end
+
+  it 'should set and receiver project name' do
+    config.project_name = 'base-project'
+
+    expect(config.project_name).to eq 'base-project'
   end
 end
