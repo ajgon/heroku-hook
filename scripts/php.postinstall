@@ -1,14 +1,17 @@
 #!/usr/bin/env bash
 rm /app/.heroku
-echo -e "#\x21/usr/bin/env bash\n$1/.heroku/php/sbin/httpd -d $1/.heroku/php/ \"\$@\"" > $1/.heroku/php/bin/httpd
-echo -e "#\x21/usr/bin/env bash\n$1/.heroku/php/sbin/php-fpm -p $1/.heroku/php/ \"\$@\"" > $1/.heroku/php/bin/php-fpm
-echo -e "#\x21/usr/bin/env bash\n$1/.heroku/php/sbin/nginx -p $1/.heroku/php -c $1/.heroku/php/etc/nginx/nginx.conf \"\$@\"" > $1/.heroku/php/bin/nginx
 echo -e "client_body_temp_path $1/.heroku/php/var/run/nginx/client_body_temp;\nproxy_temp_path $1/.heroku/php/var/run/nginx/proxy_temp;\nfastcgi_temp_path $1/.heroku/php/var/run/nginx/fastcgi_temp;\nuwsgi_temp_path $1/.heroku/php/var/run/nginx/uwsgi_temp_path;\nscgi_temp_path $1/.heroku/php/var/run/nginx/scgi_temp_path;" > $1/.heroku/nginx-extra
-chmod +x $1/.heroku/php/bin/httpd
-chmod +x $1/.heroku/php/bin/php-fpm
-chmod +x $1/.heroku/php/bin/nginx
 sed -i'' "s@\"/app@\"$1@g" $1/.heroku/php/etc/apache2/httpd.conf
+
+# php-fpm hack
+sed -i'' "s@\`which php-fpm\`@\`which php-fpm\` -p $1/.heroku/php/@" $1/vendor/bin/heroku-php-nginx
+sed -i'' "s@\`which php-fpm\`@\`which php-fpm\` -p $1/.heroku/php/@" $1/vendor/bin/heroku-php-apache2
+
+# webserver hack
+sed -i'' "s@php-fpm()@httpd() {\n    \`which httpd\` -d $1/.heroku/php \"\$\@\"\n}\nphp-fpm()@" $1/vendor/bin/heroku-php-apache2
+sed -i'' "s@php-fpm()@nginx() {\n    \`which nginx\` -p $1/.heroku/php -c $1/.heroku/php/etc/nginx/nginx.conf \"\$\@\"\n}\nphp-fpm()@" $1/vendor/bin/heroku-php-nginx
 sed -i'' "s@daemon off;@daemon off; pid $1/.heroku/php/var/run/nginx/nginx.pid;@g" $1/vendor/bin/heroku-php-nginx
+
 
 # If using nginx, don't forget to add -C .heroku/nginx-extra to procfile runner i.e.
 # web: vendor/bin/heroku-php-nginx -C .heroku/nginx-extra
