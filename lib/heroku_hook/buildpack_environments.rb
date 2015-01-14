@@ -10,7 +10,8 @@ module HerokuHook
     def php
       {
         'HOME' => app_path,
-        'LD_LIBRARY_PATH' => "#{app_path}/.heroku/php/lib"
+        'LD_LIBRARY_PATH' => "#{app_path}/.heroku/php/lib",
+        'PHP_INI_SCAN_DIR' => "#{app_path}/.heroku/php/etc/php/conf.d"
       }
     end
 
