@@ -48,7 +48,7 @@ RSpec.describe 'Releaser' do
 
       expect(env_file_contents).to eq(
         "GEM_PATH=#{app_path}/vendor/bundle/ruby/2.1.0:#{ENV['GEM_PATH']}\n" \
-        "LANG=en_US.UTF-8\n" \
+	"LANG=#{ENV['LANG']}\n" \
         "PATH=#{app_path}/bin:#{app_path}/vendor/bundle/bin:#{app_path}/vendor/bundle/ruby/2.1.0/bin:#{ENV['PATH']}\n" \
         "RACK_ENV=#{rack_env}\n" \
         "RAILS_ENV=#{rails_env}\n" \

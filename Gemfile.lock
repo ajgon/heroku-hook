@@ -96,8 +96,8 @@ GEM
       json
       launchy
       mixlib-cli
-    sass (3.4.9)
-    sexp_processor (4.4.4)
+    sass (3.4.10)
+    sexp_processor (4.4.5)
     simplecov (0.9.1)
       docile (~> 1.1.0)
       multi_json (~> 1.0)
