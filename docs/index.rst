@@ -16,12 +16,10 @@ considered production ready - however it behaves pretty well if you need a quick
 client-preview server.
 
 
-Contents:
-
 .. toctree::
    :hidden:
 
-   quckstart
+   quickstart
 
 :doc:`quickstart`
    How to setup a fully working server in minutes
