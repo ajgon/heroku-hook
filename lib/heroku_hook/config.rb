@@ -10,10 +10,11 @@ module HerokuHook
     @config = {}
 
     def load(path = nil)
-      @config = merge_with_defaults(
+      default_config = recursive_merge(
         YAML.load_file(File.join(File.dirname(__FILE__), '../..', 'config', 'heroku-hook.yml')),
-        File.exist?(path.to_s) ? YAML.load_file(path) : {}
+        File.exist?('/etc/heroku-hook.yml') ? YAML.load_file('/etc/heroku-hook.yml') : {}
       )
+      @config = merge_with_defaults(default_config, File.exist?(path.to_s) ? YAML.load_file(path) : {})
     end
 
     def method_missing(name, value = nil)

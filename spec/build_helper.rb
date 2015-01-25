@@ -19,15 +19,20 @@ module BuildHelper
   def prepare_build_config
     HerokuHook::Config.load(File.join(RSpec.configuration.fixture_path, 'config', 'heroku-hook.yml'))
     assign_build_config_variables
+    assign_project_config_variables
   end
 
   def assign_build_config_variables
-    HerokuHook::Config.project.base_path = build_projects_base_path
-    HerokuHook::Config.project.base_log_path = build_projects_base_path
     HerokuHook::Config.buildpacks.path = build_buildpacks_path
     HerokuHook::Config.nginx.configs_path = build_projects_base_path
     HerokuHook::Config.supervisord.configs_path = build_projects_base_path
     HerokuHook::Config.ports.path = build_projects_base_path
+  end
+
+  def assign_project_config_variables
+    project = HerokuHook::Config.project
+    project.base_path = build_projects_base_path
+    project.base_log_path = build_projects_base_path
   end
 
   def rack_env
