@@ -7,7 +7,7 @@ module HerokuHook
       def initialize
         @fetcher, @detector = Fetcher.new, Detector.new
         @compiler, @releaser = Compiler.new, Releaser.new
-        @post_install = PostInstall.new
+        @post_install, @launcher = PostInstall.new, Launcher.new
         super
       end
 
@@ -16,7 +16,7 @@ module HerokuHook
         language, _success = @detector.run
         @compiler.run(language)
         @releaser.run(language)
-        @post_install.run(language)
+        run_postinstall(language)
       end
 
       def run_command(cmd, context = nil)
@@ -25,6 +25,11 @@ module HerokuHook
       end
 
       private
+
+      def run_postinstall(language)
+        @post_install.run(language)
+        @launcher.run
+      end
 
       def run_context(context)
         return @app_path if context.to_s == ''

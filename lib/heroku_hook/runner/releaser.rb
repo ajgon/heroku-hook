@@ -16,6 +16,7 @@ module HerokuHook
         build_release_config(language)
         prepare_release_variables(language)
         build_configurations
+        create_directories
         [nil, true]
       end
 
@@ -23,6 +24,10 @@ module HerokuHook
         build_procfile
         build_nginx_config
         build_supervisord_config
+      end
+
+      def create_directories
+        FileUtils.mkdir_p(log_path)
       end
 
       def prepare_release_variables(language)
@@ -37,10 +42,10 @@ module HerokuHook
       end
 
       def build_procfile
-        return if File.exist?(procfile_path)
         File.open(procfile_path, 'w') do |procfile|
           prepare_procfile procfile
-        end
+        end unless File.exist?(procfile_path)
+        insert_envs_into_procfile(procfile_path)
       end
 
       def build_nginx_config
@@ -62,10 +67,14 @@ module HerokuHook
 
       def run_foreman_export(name)
         cmd = "foreman export #{name} #{Config.send(name).send(:configs_path)} -p #{@port} " \
-              "-u #{Config.processes_owner} -f #{procfile_path} -a #{project_name} -e #{all_env_paths}"
+              "-u #{Config.processes_owner} -f #{procfile_path} -a #{project_name} -e #{all_env_paths} -l #{log_path}"
         Open3.popen3(defaults_for_foreman.merge(all_envs_with_port_handler.envs), cmd) do |_in, _out, _err, thread|
           thread.join
         end
+      end
+
+      def log_path
+        File.join(Config.project.base_log_path, project_name)
       end
 
       def procfile_path
@@ -74,8 +83,15 @@ module HerokuHook
 
       def prepare_procfile(handler)
         %w(web).each do |item|
-          item_line = all_envs_with_port_handler.expand_string(release_config['default_process_types'][item])
+          item_line = release_config['default_process_types'][item]
           handler.write "#{item}: #{item_line}\n"
+        end
+      end
+
+      def insert_envs_into_procfile(path)
+        procfile_data = all_envs_with_port_handler.expand_string(File.read(path))
+        File.open(path, 'w') do |procfile|
+          procfile.write(procfile_data)
         end
       end
 

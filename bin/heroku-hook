@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-Dir["#{File.dirname(__FILE__)}/../lib/**/*.rb"].each { |f| require f }
+require File.join(File.dirname(__FILE__), '..', 'lib', 'heroku_hook.rb')
 
 HerokuHook::Config.load(File.join(Dir.pwd, 'hooks', '.heroku-hook.yml'))
 if ARGV[0] && ARGV[0][0..2] == 'run'

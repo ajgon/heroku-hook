@@ -48,7 +48,7 @@ RSpec.describe 'Releaser' do
 
       expect(env_file_contents).to eq(
         "GEM_PATH=#{app_path}/vendor/bundle/ruby/2.1.0:#{ENV['GEM_PATH']}\n" \
-	"LANG=#{ENV['LANG']}\n" \
+        "LANG=#{ENV['LANG']}\n" \
         "PATH=#{app_path}/bin:#{app_path}/vendor/bundle/bin:#{app_path}/vendor/bundle/ruby/2.1.0/bin:#{ENV['PATH']}\n" \
         "RACK_ENV=#{rack_env}\n" \
         "RAILS_ENV=#{rails_env}\n" \
@@ -83,13 +83,14 @@ RSpec.describe 'Releaser' do
       releaser.build_nginx_config
 
       nginx_config = File.read(nginx_configs_path)
+      base_log_path = HerokuHook::Config.project.base_log_path
 
       expect(File.exist?(nginx_configs_path)).to be_truthy
 
       expect(nginx_config).to match(/^upstream bare \{$/)
       expect(nginx_config).to match(/server localhost:#{port}/)
-      expect(nginx_config).to match(%r{access_log /var/log/bare/bare-nginx-access.log})
-      expect(nginx_config).to match(%r{error_log  /var/log/bare/bare-nginx-error.log})
+      expect(nginx_config).to match(%r{access_log #{base_log_path}/bare/bare-nginx-access.log})
+      expect(nginx_config).to match(%r{error_log  #{base_log_path}/bare/bare-nginx-error.log})
       expect(nginx_config).to match(/server_name\s+bare.lvh.me;/)
       expect(nginx_config).to match(%r{root .*/spec/fs-sandbox/bare/_app/public;})
       expect(nginx_config).to match(%r{proxy_pass http://bare;})
@@ -100,13 +101,14 @@ RSpec.describe 'Releaser' do
       releaser.build_supervisord_config
 
       supervisord_config = File.read(supervisord_configs_path)
+      base_log_path = HerokuHook::Config.project.base_log_path
 
       expect(File.exist?(supervisord_configs_path)).to be_truthy
       expect(supervisord_config).to match(/^\[program:bare-web-1\]$/)
       expect(supervisord_config).to match(/^command=heroku-hook run-for-bare bin\/rails server/)
-      expect(supervisord_config).to match(%r{^stdout_logfile=/var/log/bare/web-1.log$})
-      expect(supervisord_config).to match(%r{^stderr_logfile=/var/log/bare/web-1.error.log$})
-      expect(supervisord_config).to match(/^user=web$/)
+      expect(supervisord_config).to match(%r{^stdout_logfile=#{base_log_path}/bare/web-1.log$})
+      expect(supervisord_config).to match(%r{^stderr_logfile=#{base_log_path}/bare/web-1.error.log$})
+      expect(supervisord_config).to match(/^user=git$/)
       expect(supervisord_config).to match(%r{^directory=.*/spec/fs-sandbox/bare/_app$})
       expect(supervisord_config).to match(/^environment=.*HOME="#{releaser.app_path}"/)
       expect(supervisord_config).to match(/^environment=.*PORT="#{port}"/)

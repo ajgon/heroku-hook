@@ -1,7 +1,8 @@
 stack: cedar
-processes_owner: web
+processes_owner: git
 project:
   base_path: /opt/apps
+  base_log_path: /var/log/apps
   base_domain: lvh.me
 dirs:
   app: _app

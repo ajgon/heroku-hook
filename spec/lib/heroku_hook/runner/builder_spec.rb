@@ -14,7 +14,10 @@ RSpec.describe 'Builder' do
                  "\e[1G-----> Installing dependencies using 1.6.3\n" \
                  "\e[1G       Running: bundle install --without development:test --path vendor/bundle " \
                               "--binstubs vendor/bundle/bin -j4 --deployment\n" \
-                 "\e[1G       Installing hello-world 1.2.0\n"
+                 "\e[1G       Installing hello-world 1.2.0\n" \
+                 "\e[1G-----> Launching... done\n" \
+                 "\e[1G       http://bare.lvh.me/ deployed\n" \
+                 "\e[1G\n"
     ).to_stdout
   end
 

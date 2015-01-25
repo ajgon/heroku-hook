@@ -23,6 +23,7 @@ module BuildHelper
 
   def assign_build_config_variables
     HerokuHook::Config.project.base_path = build_projects_base_path
+    HerokuHook::Config.project.base_log_path = build_projects_base_path
     HerokuHook::Config.buildpacks.path = build_buildpacks_path
     HerokuHook::Config.nginx.configs_path = build_projects_base_path
     HerokuHook::Config.supervisord.configs_path = build_projects_base_path
