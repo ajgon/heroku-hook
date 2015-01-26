@@ -9,13 +9,13 @@ gem 'dotenv'
 gem 'sys-proctable'
 
 group :development do
-  gem 'brakeman', require: false
+  gem 'brakeman', '~>3.0.0', require: false
   gem 'rubocop', require: false
   gem 'reek', require: false
   gem 'overcommit', require: false
   gem 'gemsurance', require: false
   gem 'sandi_meter', require: false
-  gem 'travis-lint', require: false
+  gem 'travis', require: false
 end
 
 group :test do

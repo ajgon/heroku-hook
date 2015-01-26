@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
-cd $1
+cd "$1"
 $2
